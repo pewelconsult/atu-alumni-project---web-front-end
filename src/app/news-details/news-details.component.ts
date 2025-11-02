@@ -1,11 +1,274 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { User } from '../../models/user';
+import { NewsArticle, NewsComment } from '../../models/news';
+import { AuthService } from '../../services/auth.service';
+import { NewsService } from '../../services/news.service';
+import { ApiResponse } from '../../models/api-response';
+
 
 @Component({
   selector: 'app-news-details',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './news-details.component.html',
   styleUrl: './news-details.component.scss'
 })
-export class NewsDetailsComponent {
+export class NewsDetailsComponent implements OnInit {
+  currentUser: User | null = null;
+  article: NewsArticle | null = null;
+  comments: NewsComment[] = [];
+  newComment = '';
+  
+  isLoading = false;
+  isLoadingComments = false;
+  errorMessage = '';
 
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private newsService: NewsService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    // Get current user
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+
+    // Get article ID from route
+    const articleId = Number(this.route.snapshot.paramMap.get('id'));
+    if (articleId) {
+      this.loadArticle(articleId);
+      this.loadComments(articleId);
+    }
+  }
+
+  /**
+   * Load article details
+   */
+  loadArticle(articleId: number): void {
+    this.isLoading = true;
+    
+    const userId = this.currentUser?.id;
+    this.newsService.getArticleById(articleId, userId).subscribe({
+      next: (response: ApiResponse<NewsArticle>) => {
+        if (response.success && response.data) {
+          this.article = response.data;
+          // Increment view count
+          this.newsService.incrementViewCount(articleId).subscribe();
+        }
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        console.error('Error loading article:', error);
+        this.errorMessage = 'Failed to load article.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  /**
+   * Load comments
+   */
+  loadComments(articleId: number): void {
+    this.isLoadingComments = true;
+    
+    this.newsService.getArticleComments(articleId).subscribe({
+      next: (response: ApiResponse<NewsComment[]>) => {
+        if (response.success && response.data) {
+          this.comments = response.data;
+        }
+        this.isLoadingComments = false;
+      },
+      error: (error: any) => {
+        console.error('Error loading comments:', error);
+        this.isLoadingComments = false;
+      }
+    });
+  }
+
+  /**
+   * Back to news list
+   */
+  goBack(): void {
+    this.router.navigate(['/news']);
+  }
+
+  /**
+   * Like/unlike article
+   */
+  toggleLike(): void {
+    if (!this.currentUser || !this.article) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (this.article.user_has_liked) {
+      // Unlike
+      this.newsService.unlikeArticle(this.article.id, this.currentUser.id).subscribe({
+        next: (response: ApiResponse) => {
+          if (response.success && this.article) {
+            this.article.likes_count--;
+            this.article.user_has_liked = false;
+          }
+        },
+        error: (error: any) => {
+          console.error('Error unliking article:', error);
+        }
+      });
+    } else {
+      // Like
+      this.newsService.likeArticle(this.article.id, this.currentUser.id).subscribe({
+        next: (response: ApiResponse) => {
+          if (response.success && this.article) {
+            this.article.likes_count++;
+            this.article.user_has_liked = true;
+          }
+        },
+        error: (error: any) => {
+          console.error('Error liking article:', error);
+        }
+      });
+    }
+  }
+
+  /**
+   * Add comment
+   */
+  addComment(): void {
+    if (!this.currentUser || !this.article) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const comment = this.newComment.trim();
+    if (!comment) return;
+
+    this.newsService.addComment(this.article.id, {
+      user_id: this.currentUser.id,
+      comment: comment
+    }).subscribe({
+      next: (response: ApiResponse<NewsComment>) => {
+        if (response.success && response.data) {
+          this.comments.unshift(response.data);
+          this.newComment = '';
+          if (this.article) {
+            this.article.comments_count++;
+          }
+        }
+      },
+      error: (error: any) => {
+        console.error('Error adding comment:', error);
+        alert('Failed to add comment');
+      }
+    });
+  }
+
+  /**
+   * Like/unlike comment
+   */
+  toggleCommentLike(comment: NewsComment): void {
+    if (!this.currentUser || !this.article) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (comment.user_has_liked) {
+      // Unlike
+      this.newsService.unlikeComment(this.article.id, comment.id, this.currentUser.id).subscribe({
+        next: (response: ApiResponse) => {
+          if (response.success) {
+            comment.likes_count--;
+            comment.user_has_liked = false;
+          }
+        },
+        error: (error: any) => {
+          console.error('Error unliking comment:', error);
+        }
+      });
+    } else {
+      // Like
+      this.newsService.likeComment(this.article.id, comment.id, this.currentUser.id).subscribe({
+        next: (response: ApiResponse) => {
+          if (response.success) {
+            comment.likes_count++;
+            comment.user_has_liked = true;
+          }
+        },
+        error: (error: any) => {
+          console.error('Error liking comment:', error);
+        }
+      });
+    }
+  }
+
+  /**
+   * Format date
+   */
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  /**
+   * Format relative time
+   */
+  formatRelativeTime(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+    return `${Math.floor(diffDays / 365)} years ago`;
+  }
+
+  /**
+   * Get user initials
+   */
+  getUserInitials(name?: string): string {
+    if (!name) return 'U';
+    const parts = name.split(' ');
+    if (parts.length >= 2) {
+      return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  /**
+   * Format view count
+   */
+  formatViewCount(count: number): string {
+    if (count >= 1000) {
+      return (count / 1000).toFixed(1) + 'K';
+    }
+    return count.toString();
+  }
+
+  /**
+   * Get category badge class
+   */
+  getCategoryBadgeClass(category: string): string {
+    const colorMap: { [key: string]: string } = {
+      'Academic': 'bg-blue-600 text-white',
+      'Career': 'bg-green-600 text-white',
+      'Social': 'bg-purple-600 text-white',
+      'Alumni': 'bg-indigo-600 text-white',
+      'University': 'bg-orange-600 text-white',
+      'General': 'bg-gray-600 text-white'
+    };
+    return colorMap[category] || 'bg-gray-600 text-white';
+  }
 }

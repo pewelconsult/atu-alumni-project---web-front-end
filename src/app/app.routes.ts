@@ -21,6 +21,7 @@ import { NewsManagementComponent } from './admin/news-management/news-management
 import { NewsFormComponent } from './admin/news-form/news-form.component';
 import { LoginComponent } from './login/login.component'; 
 import { EventDetailsComponent } from './event-details/event-details.component';
+import { NewsDetailsComponent } from './news-details/news-details.component';
 
 export const routes: Routes = [
   // Root redirect
@@ -35,6 +36,7 @@ export const routes: Routes = [
   { path: 'events', component: EventsComponent },
   { path: 'events/:id', component: EventDetailsComponent },
   { path: 'news', component: NewsComponent },
+  { path: 'news/:id', component: NewsDetailsComponent },
   { path: 'forums', component: ForumComponent },
   { path: 'messages', component: MessagesComponent },
   { path: 'profile', component: ProfileComponent },

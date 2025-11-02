@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { NewsArticle } from '../models/news';
+import { NewsArticle, NewsComment } from '../models/news';
 import { ApiResponse } from '../models/api-response';
 import { environment } from '../environments/environment';
 
@@ -94,6 +94,62 @@ export class NewsService {
    */
   unlikeArticle(id: number, userId: number): Observable<ApiResponse> {
     return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}/unlike`, {
+      params: { user_id: userId.toString() }
+    });
+  }
+
+  /**
+   * Get article comments
+   */
+  getArticleComments(articleId: number, page: number = 1, limit: number = 50): Observable<ApiResponse<NewsComment[]>> {
+    return this.http.get<ApiResponse<NewsComment[]>>(`${this.apiUrl}/${articleId}/comments`, {
+      params: { page: page.toString(), limit: limit.toString() }
+    });
+  }
+
+  /**
+   * Add comment to article
+   */
+  addComment(articleId: number, data: {
+    user_id: number;
+    comment: string;
+  }): Observable<ApiResponse<NewsComment>> {
+    return this.http.post<ApiResponse<NewsComment>>(`${this.apiUrl}/${articleId}/comments`, data);
+  }
+
+  /**
+   * Update comment
+   */
+  updateComment(articleId: number, commentId: number, data: {
+    user_id: number;
+    comment: string;
+  }): Observable<ApiResponse<NewsComment>> {
+    return this.http.put<ApiResponse<NewsComment>>(`${this.apiUrl}/${articleId}/comments/${commentId}`, data);
+  }
+
+  /**
+   * Delete comment
+   */
+  deleteComment(articleId: number, commentId: number, userId: number): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(`${this.apiUrl}/${articleId}/comments/${commentId}`, {
+      params: { user_id: userId.toString() }
+    });
+  }
+
+  /**
+   * Like comment
+   */
+  likeComment(articleId: number, commentId: number, userId: number): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(`${this.apiUrl}/${articleId}/comments/${commentId}/like`, {
+      user_id: userId
+    });
+  }
+
+  /**
+   * Unlike comment
+   */
+  unlikeComment(articleId: number, commentId: number, userId: number): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(`${this.apiUrl}/${articleId}/comments/${commentId}/unlike`, {
       params: { user_id: userId.toString() }
     });
   }
