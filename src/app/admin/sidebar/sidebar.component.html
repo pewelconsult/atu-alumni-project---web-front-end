@@ -1,0 +1,64 @@
+<!-- Sidebar Component -->
+<div class="w-64 bg-gradient-to-b from-primary to-accent text-white shadow-lg flex flex-col">
+  <div class="p-6 flex-1">
+    <div class="flex items-center space-x-3 mb-8">
+      <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-primary font-bold">
+        <i class="fas fa-crown"></i>
+      </div>
+      <h1 class="text-xl font-bold">Admin Portal</h1>
+    </div>
+    
+    <nav class="space-y-2">
+      <a routerLink="/dashboard" class="flex items-center space-x-3 p-3 rounded-lg bg-white/10 transition-all duration-300">
+        <i class="fas fa-tachometer-alt w-5"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/users" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-300">
+        <i class="fas fa-users w-5"></i>
+        <span>Users</span>
+        <span class="ml-auto bg-white/20 text-xs px-2 py-1 rounded-full">24</span>
+      </a>
+      <a routerLink="/adminEvents" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-300">
+        <i class="fas fa-calendar-alt w-5"></i>
+        <span>Events</span>
+        <span class="ml-auto bg-white/20 text-xs px-2 py-1 rounded-full">18</span>
+      </a>
+      <a routerLink="/adminJob" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-300">
+        <i class="fas fa-briefcase w-5"></i>
+        <span>Jobs</span>
+        <span class="ml-auto bg-white/20 text-xs px-2 py-1 rounded-full">156</span>
+      </a>
+      <a routerLink="/adminForum" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-300">
+        <i class="fas fa-comments w-5"></i>
+        <span>Forums</span>
+        <span class="ml-auto bg-white/20 text-xs px-2 py-1 rounded-full">42</span>
+      </a>
+      <a routerLink="/adminNews" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-300">
+        <i class="fas fa-newspaper w-5"></i>
+        <span>News</span>
+      </a>
+      <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-300">
+        <i class="fas fa-chart-bar w-5"></i>
+        <span>Reports</span>
+      </a>
+      <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/10 transition-all duration-300">
+        <i class="fas fa-cog w-5"></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+  </div>
+  
+  <div class="p-6 border-t border-white/20">
+    <div class="flex items-center space-x-3 mb-4">
+      <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary font-bold">AD</div>
+      <div class="flex-1">
+        <p class="font-medium">Admin User</p>
+        <p class="text-sm opacity-80">Super Administrator</p>
+      </div>
+    </div>
+    <button class="w-full flex items-center justify-center space-x-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-300">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </button>
+  </div>
+</div>

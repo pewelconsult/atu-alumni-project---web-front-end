@@ -1,0 +1,497 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="ml-64 p-8">
+    <!-- Controls Section -->
+      <div class="bg-white rounded-xl shadow-md p-5 mb-6 slide-in">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <!-- Search Bar -->
+          <div class="relative flex-1 max-w-md">
+            <input type="text" placeholder="Search events by title, location, or description..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+          </div>
+          
+          <!-- Filter Dropdowns -->
+          <div class="flex flex-wrap gap-3">
+            <div class="relative">
+              <select class="appearance-none w-32 pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
+                <option value="all">All Types</option>
+                <option value="networking">Networking</option>
+                <option value="workshop">Workshop</option>
+                <option value="conference">Conference</option>
+                <option value="social">Social</option>
+                <option value="career">Career</option>
+              </select>
+              <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+            </div>
+            
+            <div class="relative">
+              <select class="appearance-none w-32 pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
+                <option value="all">All Status</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="ongoing">Ongoing</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+              <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+            </div>
+            
+            <button (click)="navigateToCreateEvent()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors duration-300 text-sm flex items-center space-x-2">
+              <i class="fas fa-calendar-plus"></i>
+              <span>Create Event</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="flex mt-4 border-b border-gray-200">
+          <button class="px-4 py-2 font-medium rounded-t-lg transition-colors duration-300 bg-primary text-white text-sm">All Events (48)</button>
+          <button class="px-4 py-2 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm">Upcoming (18)</button>
+          <button class="px-4 py-2 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm">Ongoing (3)</button>
+          <button class="px-4 py-2 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm">Past (27)</button>
+        </div>
+      </div>
+
+    <!-- Events Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Total Events</p>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1">48</h3>
+            <div class="flex items-center mt-2">
+              <span class="text-green-500 text-sm font-medium flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i>
+                15.2%
+              </span>
+              <span class="text-gray-500 text-sm ml-2">from last month</span>
+            </div>
+          </div>
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+            <i class="fas fa-calendar-alt text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Upcoming Events</p>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1">18</h3>
+            <div class="flex items-center mt-2">
+              <span class="text-blue-500 text-sm font-medium flex items-center">
+                <i class="fas fa-circle mr-1 text-xs"></i>
+                5 this week
+              </span>
+            </div>
+          </div>
+          <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
+            <i class="fas fa-clock text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Total Attendees</p>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1">2,847</h3>
+            <div class="flex items-center mt-2">
+              <span class="text-green-500 text-sm font-medium flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i>
+                22.8%
+              </span>
+            </div>
+          </div>
+          <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
+            <i class="fas fa-users text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Avg. Attendance</p>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1">76%</h3>
+            <div class="flex items-center mt-2">
+              <span class="text-green-500 text-sm font-medium flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i>
+                8.3%
+              </span>
+            </div>
+          </div>
+          <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600">
+            <i class="fas fa-chart-line text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Events Table -->
+    <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <div class="flex items-center space-x-2">
+                  <input type="checkbox" class="rounded border-gray-300">
+                  <span>Event</span>
+                </div>
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attendees</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <!-- Event 1 -->
+            <tr class="hover:bg-gray-50 transition-colors duration-200">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 mr-3">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center text-white">
+                      <i class="fas fa-utensils"></i>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-gray-900">Annual Alumni Dinner 2023</div>
+                      <div class="text-sm text-gray-500">Networking & Social</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">Dec 15, 2023</div>
+                <div class="text-sm text-gray-500">6:00 PM - 10:00 PM</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                Main Campus, ATU
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="text-sm text-gray-900 font-medium">120</div>
+                  <div class="ml-2 w-20 bg-gray-200 rounded-full h-2">
+                    <div class="bg-green-600 h-2 rounded-full" style="width: 85%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Upcoming
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900" title="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-purple-600 hover:text-purple-900" title="Manage Attendees">
+                    <i class="fas fa-users"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Event 2 -->
+            <tr class="hover:bg-gray-50 transition-colors duration-200">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 mr-3">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-accent to-secondary rounded-lg flex items-center justify-center text-white">
+                      <i class="fas fa-laptop"></i>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-gray-900">Tech Innovation Summit</div>
+                      <div class="text-sm text-gray-500">Conference & Workshop</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">Jan 20, 2024</div>
+                <div class="text-sm text-gray-500">9:00 AM - 5:00 PM</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                Virtual Event
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="text-sm text-gray-900 font-medium">85</div>
+                  <div class="ml-2 w-20 bg-gray-200 rounded-full h-2">
+                    <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                  Upcoming
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900" title="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-purple-600 hover:text-purple-900" title="Manage Attendees">
+                    <i class="fas fa-users"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Event 3 -->
+            <tr class="hover:bg-gray-50 transition-colors duration-200">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 mr-3">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-secondary to-primary rounded-lg flex items-center justify-center text-white">
+                      <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-gray-900">Career Development Workshop</div>
+                      <div class="text-sm text-gray-500">Workshop & Training</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">Nov 30, 2023</div>
+                <div class="text-sm text-gray-500">2:00 PM - 4:00 PM</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                Business Building
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="text-sm text-gray-900 font-medium">45</div>
+                  <div class="ml-2 w-20 bg-gray-200 rounded-full h-2">
+                    <div class="bg-yellow-600 h-2 rounded-full" style="width: 45%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                  Ongoing
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900" title="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-purple-600 hover:text-purple-900" title="Manage Attendees">
+                    <i class="fas fa-users"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Event 4 -->
+            <tr class="hover:bg-gray-50 transition-colors duration-200">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 mr-3">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center text-white">
+                      <i class="fas fa-basketball-ball"></i>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-gray-900">Alumni Sports Day</div>
+                      <div class="text-sm text-gray-500">Sports & Recreation</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">Dec 8, 2023</div>
+                <div class="text-sm text-gray-500">8:00 AM - 2:00 PM</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                Sports Complex
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="text-sm text-gray-900 font-medium">65</div>
+                  <div class="ml-2 w-20 bg-gray-200 rounded-full h-2">
+                    <div class="bg-green-600 h-2 rounded-full" style="width: 72%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Upcoming
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900" title="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-purple-600 hover:text-purple-900" title="Manage Attendees">
+                    <i class="fas fa-users"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Event 5 -->
+            <tr class="hover:bg-gray-50 transition-colors duration-200">
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 mr-3">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-accent to-secondary rounded-lg flex items-center justify-center text-white">
+                      <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div>
+                      <div class="text-sm font-medium text-gray-900">Investment Seminar</div>
+                      <div class="text-sm text-gray-500">Finance & Education</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">Oct 15, 2023</div>
+                <div class="text-sm text-gray-500">Completed</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                Online Webinar
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="text-sm text-gray-900 font-medium">92</div>
+                  <div class="ml-2 w-20 bg-gray-200 rounded-full h-2">
+                    <div class="bg-gray-600 h-2 rounded-full" style="width: 88%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                  Completed
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900" title="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-purple-600 hover:text-purple-900" title="Manage Attendees">
+                    <i class="fas fa-users"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="bg-white px-6 py-4 border-t border-gray-200">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-gray-700">
+            Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">48</span> events
+          </div>
+          <div class="flex space-x-2">
+            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+              Previous
+            </button>
+            <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md text-sm font-medium">
+              1
+            </button>
+            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+              2
+            </button>
+            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+              3
+            </button>
+            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="mt-6 bg-white rounded-2xl shadow-md p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-600">2 events selected</span>
+          <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+            <option>Bulk Actions</option>
+            <option>Publish</option>
+            <option>Unpublish</option>
+            <option>Duplicate</option>
+            <option>Delete</option>
+          </select>
+          <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-300">
+            Apply
+          </button>
+        </div>
+        <button class="text-gray-500 hover:text-gray-700 text-sm flex items-center space-x-1">
+          <i class="fas fa-download"></i>
+          <span>Export Events</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-gradient-to-r from-primary to-accent text-white rounded-2xl p-6">
+        <h3 class="font-bold text-lg mb-2">Most Popular Event</h3>
+        <p class="text-xl font-bold mb-1">Annual Alumni Dinner 2023</p>
+        <p class="opacity-90">120 attendees • 85% capacity</p>
+      </div>
+      
+      <div class="bg-gradient-to-r from-accent to-secondary text-white rounded-2xl p-6">
+        <h3 class="font-bold text-lg mb-2">Next Event</h3>
+        <p class="text-xl font-bold mb-1">Career Development Workshop</p>
+        <p class="opacity-90">Starts in 2 days • 45 attendees</p>
+      </div>
+      
+      <div class="bg-gradient-to-r from-secondary to-primary text-white rounded-2xl p-6">
+        <h3 class="font-bold text-lg mb-2">Event Performance</h3>
+        <p class="text-xl font-bold mb-1">76% Avg. Attendance</p>
+        <p class="opacity-90">+8.3% from last quarter</p>
+      </div>
+    </div>
+  </div>
+</div>

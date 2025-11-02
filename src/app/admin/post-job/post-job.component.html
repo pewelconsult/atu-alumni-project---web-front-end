@@ -1,0 +1,397 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="lg:ml-64 transition-all duration-300">
+    <div class="p-4 md:p-6 lg:p-8">
+      <!-- Header -->
+      <div class="container mx-auto max-w-4xl">
+        <div class="bg-gradient-to-r from-primary to-accent text-white rounded-2xl shadow-lg p-5 mb-6 slide-in relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+          <div class="relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+              <div>
+                <h1 class="text-2xl font-bold mb-2">Post New Job</h1>
+                <p class="opacity-90 text-sm">Create a new job posting for alumni opportunities</p>
+              </div>
+              <div class="flex space-x-3 mt-4 md:mt-0">
+                <button class="bg-white/20 text-white px-4 py-2.5 rounded-xl hover:bg-white/30 transition-all duration-300 font-medium text-sm border border-white/30 flex items-center" (click)="navigateToJobManagement()">
+                  <i class="fas fa-arrow-left mr-2"></i>Back to Jobs
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="bg-white rounded-xl shadow-sm p-5 mb-6 border border-gray-100">
+          <div class="flex items-center justify-between max-w-2xl mx-auto">
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">1</div>
+              <span class="text-xs mt-2 font-medium text-primary">Job Details</span>
+            </div>
+            <div class="h-1 flex-1 bg-primary mx-2"></div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">2</div>
+              <span class="text-xs mt-2 font-medium text-primary">Requirements</span>
+            </div>
+            <div class="h-1 flex-1 bg-gray-200 mx-2"></div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-sm">3</div>
+              <span class="text-xs mt-2 font-medium text-gray-500">Review</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Form -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-6">
+          <h2 class="text-lg font-bold text-gray-800 mb-6">Job Information</h2>
+          
+          <form id="postJobForm">
+            <!-- Company & Job Title Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Company Name *</label>
+                <input 
+                  type="text" 
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                  placeholder="Enter company name"
+                  required
+                >
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Job Title *</label>
+                <input 
+                  type="text" 
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                  placeholder="Enter job title"
+                  required
+                >
+              </div>
+            </div>
+
+            <!-- Job Description -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Job Description *</label>
+              <textarea 
+                rows="6" 
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                placeholder="Describe the job responsibilities, requirements, and what you're looking for in a candidate..."
+                required
+              ></textarea>
+              <p class="text-xs text-gray-500 mt-2">Minimum 100 characters. Include key responsibilities and expectations.</p>
+            </div>
+
+            <!-- Job Type & Location Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Job Type *</label>
+                <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white text-sm" required>
+                  <option value="">Select job type</option>
+                  <option value="full-time">Full-time</option>
+                  <option value="part-time">Part-time</option>
+                  <option value="remote">Remote</option>
+                  <option value="internship">Internship</option>
+                  <option value="contract">Contract</option>
+                  <option value="freelance">Freelance</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Location *</label>
+                <input 
+                  type="text" 
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                  placeholder="e.g., Accra, Ghana or Remote"
+                  required
+                >
+              </div>
+            </div>
+
+            <!-- Application Details -->
+            <div class="mb-6">
+              <h3 class="text-md font-medium text-gray-800 mb-4">Application Details</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Application Email *</label>
+                  <input 
+                    type="email" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                    placeholder="careers@company.com"
+                    required
+                  >
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Application URL</label>
+                  <input 
+                    type="url" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                    placeholder="https://company.com/careers/apply"
+                  >
+                  <p class="text-xs text-gray-500 mt-2">Optional: External application link</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Salary Information -->
+            <div class="mb-6">
+              <h3 class="text-md font-medium text-gray-800 mb-4">Salary & Compensation</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Salary Range</label>
+                  <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white text-sm">
+                    <option value="">Select range</option>
+                    <option value="0-30000">$0 - $30,000</option>
+                    <option value="30000-50000">$30,000 - $50,000</option>
+                    <option value="50000-70000">$50,000 - $70,000</option>
+                    <option value="70000-90000">$70,000 - $90,000</option>
+                    <option value="90000-120000">$90,000 - $120,000</option>
+                    <option value="120000+">$120,000+</option>
+                    <option value="negotiable">Negotiable</option>
+                    <option value="confidential">Confidential</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                  <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white text-sm">
+                    <option value="USD">USD ($)</option>
+                    <option value="GHS">GHS (₵)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Pay Period</label>
+                  <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white text-sm">
+                    <option value="year">Per Year</option>
+                    <option value="month">Per Month</option>
+                    <option value="week">Per Week</option>
+                    <option value="hour">Per Hour</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Requirements & Qualifications -->
+            <div class="mb-6">
+              <h3 class="text-md font-medium text-gray-800 mb-4">Requirements & Qualifications</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Experience Level</label>
+                  <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white text-sm">
+                    <option value="">Select experience level</option>
+                    <option value="intern">Intern</option>
+                    <option value="entry">Entry Level (0-2 years)</option>
+                    <option value="mid">Mid Level (2-5 years)</option>
+                    <option value="senior">Senior Level (5+ years)</option>
+                    <option value="lead">Lead/Manager</option>
+                    <option value="executive">Executive</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Education Level</label>
+                  <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white text-sm">
+                    <option value="">Select education level</option>
+                    <option value="high-school">High School</option>
+                    <option value="diploma">Diploma</option>
+                    <option value="associate">Associate Degree</option>
+                    <option value="bachelor">Bachelor's Degree</option>
+                    <option value="master">Master's Degree</option>
+                    <option value="phd">PhD</option>
+                    <option value="none">Not Required</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Skills & Technologies -->
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Required Skills & Technologies</label>
+                <div class="border border-gray-300 rounded-xl p-4 focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent">
+                  <div id="skillsContainer" class="flex flex-wrap gap-2 mb-3">
+                    <!-- Skills will be added here dynamically -->
+                  </div>
+                  <div class="flex space-x-2">
+                    <input 
+                      type="text" 
+                      id="skillInput"
+                      class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+                      placeholder="Add a skill (e.g., JavaScript, React, Project Management)"
+                    >
+                    <button type="button" id="addSkillBtn" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors duration-300 text-sm" (click)="addSkill()">
+                      Add
+                    </button>
+                  </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Add relevant skills and technologies required for this position</p>
+              </div>
+
+              <!-- Benefits -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Benefits & Perks</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Health Insurance</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Dental Insurance</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Vision Insurance</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Retirement Plan</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Paid Time Off</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Flexible Hours</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Remote Work</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Professional Development</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                    <span class="text-sm text-gray-700">Stock Options</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="mb-6">
+              <h3 class="text-md font-medium text-gray-800 mb-4">Additional Information</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Application Deadline</label>
+                  <input
+                    type="date"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                    [min]="today"
+                  >
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Expected Start Date</label>
+                  <input
+                    type="date"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                    [min]="today"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Job Settings -->
+            <div class="mb-6">
+              <h3 class="text-md font-medium text-gray-800 mb-4">Job Settings</h3>
+              
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Featured Job</label>
+                    <p class="text-xs text-gray-500">Highlight this job on the careers page</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Accepting Applications</label>
+                    <p class="text-xs text-gray-500">Allow users to apply for this position</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <div>
+                    <label class="text-sm font-medium text-gray-700">Notify Alumni</label>
+                    <p class="text-xs text-gray-500">Send notification to relevant alumni</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-gray-200 gap-4">
+              <div class="text-sm text-gray-500">
+                <i class="fas fa-info-circle mr-1"></i>
+                All fields marked with * are required
+              </div>
+              <div class="flex space-x-3">
+                <button type="button" class="px-6 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-300 text-sm font-medium">
+                  Save as Draft
+                </button>
+                <button type="submit" class="bg-primary text-white px-6 py-3 rounded-xl hover:bg-opacity-90 transition-colors duration-300 text-sm font-medium flex items-center">
+                  <i class="fas fa-paper-plane mr-2"></i>Publish Job
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Quick Tips -->
+        <div class="bg-blue-50 rounded-xl p-5 border border-blue-100">
+          <h3 class="text-md font-medium text-blue-800 mb-3 flex items-center">
+            <i class="fas fa-lightbulb mr-2"></i>Job Posting Tips
+          </h3>
+          <ul class="text-sm text-blue-700 space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check-circle mr-2 mt-0.5 text-blue-500"></i>
+              Be specific about required skills and experience levels
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle mr-2 mt-0.5 text-blue-500"></i>
+              Include salary information to attract more qualified candidates
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle mr-2 mt-0.5 text-blue-500"></i>
+              Highlight unique benefits and company culture
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle mr-2 mt-0.5 text-blue-500"></i>
+              Use clear, concise language in the job description
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle mr-2 mt-0.5 text-blue-500"></i>
+              Set realistic application deadlines and start dates
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

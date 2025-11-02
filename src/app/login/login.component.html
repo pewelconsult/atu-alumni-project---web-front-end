@@ -1,0 +1,134 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Login Card -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <!-- Header Section -->
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center">
+        <div class="flex justify-center mb-4">
+          <div class="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+            <i class="fas fa-crown text-white text-3xl"></i>
+          </div>
+        </div>
+        <h1 class="text-2xl font-bold text-white mb-2">ATU Alumni Network</h1>
+        <p class="text-white/80 text-sm">Welcome back to your community</p>
+      </div>
+
+      <!-- Login Form -->
+      <div class="p-8">
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
+          <i class="fas fa-exclamation-circle mr-2"></i>
+          {{ errorMessage }}
+        </div>
+
+        <form (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Email Field -->
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-gray-700">Email Address</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-envelope text-gray-400"></i>
+              </div>
+              <input 
+                type="email" 
+                [(ngModel)]="email"
+                name="email"
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                placeholder="Enter your email"
+                [disabled]="isLoading"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-sm font-medium text-gray-700">Password</label>
+              <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
+            </div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-lock text-gray-400"></i>
+              </div>
+              <input 
+                [type]="showPassword ? 'text' : 'password'"
+                [(ngModel)]="password"
+                name="password"
+                class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                placeholder="Enter your password"
+                [disabled]="isLoading"
+                required
+              >
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center"
+              >
+                <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="text-gray-400 hover:text-gray-600"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me -->
+          <div class="flex items-center">
+            <input 
+              type="checkbox" 
+              id="remember"
+              [(ngModel)]="rememberMe"
+              name="rememberMe"
+              class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              [disabled]="isLoading"
+            >
+            <label for="remember" class="ml-2 text-sm text-gray-700">Remember me</label>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit"
+            [disabled]="isLoading"
+            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!isLoading">Sign In</span>
+            <span *ngIf="isLoading" class="flex items-center">
+              <i class="fas fa-spinner fa-spin mr-2"></i>
+              Signing in...
+            </span>
+            <i *ngIf="!isLoading" class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="mt-8 flex items-center">
+          <div class="flex-1 border-t border-gray-300"></div>
+          <span class="px-4 text-sm text-gray-500">New to ATU Alumni?</span>
+          <div class="flex-1 border-t border-gray-300"></div>
+        </div>
+
+        <!-- Register Link -->
+        <div class="mt-6 text-center">
+          <a href="#" class="inline-flex items-center text-blue-600 font-medium hover:text-indigo-600 transition-colors duration-300">
+            Create your account
+            <i class="fas fa-chevron-right ml-1 text-sm"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-2 gap-4 mt-8">
+      <div class="bg-white/50 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mx-auto mb-2">
+          <i class="fas fa-users"></i>
+        </div>
+        <p class="text-xs text-gray-600">Network with Alumni</p>
+      </div>
+      <div class="bg-white/50 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
+        <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 mx-auto mb-2">
+          <i class="fas fa-briefcase"></i>
+        </div>
+        <p class="text-xs text-gray-600">Career Opportunities</p>
+      </div>
+    </div>
+  </div>
+</div>

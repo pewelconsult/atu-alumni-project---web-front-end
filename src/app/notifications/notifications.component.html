@@ -1,0 +1,259 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-primary to-accent text-white rounded-2xl shadow-lg p-6 mb-8 slide-in relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+    <div class="relative z-10">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold mb-2">Notifications</h1>
+          <p class="opacity-90">Stay updated with alumni activities</p>
+        </div>
+        <div class="flex space-x-3 mt-4 md:mt-0">
+          <button class="bg-white text-primary px-4 py-2 rounded-xl hover:bg-opacity-90 transition-colors duration-300 font-medium flex items-center space-x-2">
+            <i class="fas fa-check-double"></i>
+            <span>Mark all as read</span>
+          </button>
+          <button class="bg-white text-primary px-4 py-2 rounded-xl hover:bg-opacity-90 transition-colors duration-300 font-medium flex items-center space-x-2">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col lg:flex-row gap-6">
+    <!-- Main Content -->
+    <div class="w-full lg:w-2/3">
+      <!-- Filter Tabs -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+        <div class="flex border-b border-gray-200 overflow-x-auto">
+          <button class="px-6 py-3 font-medium rounded-t-lg transition-colors duration-300 bg-primary text-white text-sm whitespace-nowrap">
+            All
+          </button>
+          <button class="px-6 py-3 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm whitespace-nowrap">
+            Unread
+          </button>
+          <button class="px-6 py-3 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm whitespace-nowrap">
+            Events
+          </button>
+          <button class="px-6 py-3 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm whitespace-nowrap">
+            Connections
+          </button>
+          <button class="px-6 py-3 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm whitespace-nowrap">
+            Jobs
+          </button>
+        </div>
+      </div>
+
+      <!-- Notifications List -->
+      <div class="space-y-4">
+        <!-- Unread Notification -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300 border-l-4 border-l-primary">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center text-white">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-gray-800">New Connection Request</h3>
+                <span class="text-xs text-gray-500">10 min ago</span>
+              </div>
+              <p class="text-gray-600 mb-3">
+                <span class="font-medium">Ama Kwarteng</span> sent you a connection request
+              </p>
+              <div class="flex space-x-3">
+                <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors duration-300 text-sm font-medium">
+                  Accept
+                </button>
+                <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-300 text-sm font-medium">
+                  Ignore
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Notification -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-accent to-secondary rounded-xl flex items-center justify-center text-white">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-gray-800">Event Reminder</h3>
+                <span class="text-xs text-gray-500">1 hour ago</span>
+              </div>
+              <p class="text-gray-600 mb-3">
+                <span class="font-medium">Tech Innovation Summit</span> is happening tomorrow at 9:00 AM
+              </p>
+              <button class="text-primary hover:text-primary-dark text-sm font-medium">
+                View Details →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Notification -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-secondary to-primary rounded-xl flex items-center justify-center text-white">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-gray-800">New Job Match</h3>
+                <span class="text-xs text-gray-500">3 hours ago</span>
+              </div>
+              <p class="text-gray-600 mb-3">
+                A new <span class="font-medium">Senior Frontend Developer</span> position matches your profile
+              </p>
+              <button class="text-primary hover:text-primary-dark text-sm font-medium">
+                View Job →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Forum Notification -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center text-white">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-gray-800">New Forum Activity</h3>
+                <span class="text-xs text-gray-500">5 hours ago</span>
+              </div>
+              <p class="text-gray-600 mb-3">
+                There are 12 new discussions in the <span class="font-medium">Tech Innovations</span> forum
+              </p>
+              <button class="text-primary hover:text-primary-dark text-sm font-medium">
+                Visit Forum →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Notification -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-accent to-secondary rounded-xl flex items-center justify-center text-white">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-gray-800">New Message</h3>
+                <span class="text-xs text-gray-500">Yesterday</span>
+              </div>
+              <p class="text-gray-600 mb-3">
+                <span class="font-medium">Mike Johnson</span> sent you a message about the upcoming project
+              </p>
+              <button class="text-primary hover:text-primary-dark text-sm font-medium">
+                Read Message →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alumni Spotlight -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-secondary to-primary rounded-xl flex items-center justify-center text-white">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-gray-800">Alumni Spotlight</h3>
+                <span class="text-xs text-gray-500">2 days ago</span>
+              </div>
+              <p class="text-gray-600 mb-3">
+                Check out this week's featured alumni: <span class="font-medium">Sarah Mensah</span>, Founder of GreenTech Solutions
+              </p>
+              <button class="text-primary hover:text-primary-dark text-sm font-medium">
+                View Profile →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="w-full lg:w-1/3 space-y-6">
+      <!-- Notification Stats -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 class="font-bold text-lg text-primary mb-4">Notification Summary</h3>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Unread Notifications</span>
+            <span class="bg-primary text-white px-2 py-1 rounded-full text-sm font-medium">3</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">This Week</span>
+            <span class="text-gray-800 font-medium">12</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">This Month</span>
+            <span class="text-gray-800 font-medium">47</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 class="font-bold text-lg text-primary mb-4">Quick Actions</h3>
+        <div class="space-y-3">
+          <button class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-300 text-left">
+            <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center text-primary">
+              <i class="fas fa-bell-slash"></i>
+            </div>
+            <div>
+              <p class="font-medium text-sm">Pause Notifications</p>
+              <p class="text-xs text-gray-500">Temporarily stop notifications</p>
+            </div>
+          </button>
+          <button class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-300 text-left">
+            <div class="w-10 h-10 bg-accent bg-opacity-10 rounded-lg flex items-center justify-center text-accent">
+              <i class="fas fa-filter"></i>
+            </div>
+            <div>
+              <p class="font-medium text-sm">Customize Filters</p>
+              <p class="text-xs text-gray-500">Manage notification preferences</p>
+            </div>
+          </button>
+          <button class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-300 text-left">
+            <div class="w-10 h-10 bg-secondary bg-opacity-10 rounded-lg flex items-center justify-center text-secondary">
+              <i class="fas fa-download"></i>
+            </div>
+            <div>
+              <p class="font-medium text-sm">Export Notifications</p>
+              <p class="text-xs text-gray-500">Download notification history</p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Notification Tips -->
+      <div class="bg-gradient-to-r from-primary to-accent rounded-2xl shadow-sm p-6 text-white">
+        <h3 class="font-bold text-lg mb-3">Notification Tips</h3>
+        <ul class="space-y-2 text-sm">
+          <li class="flex items-start space-x-2">
+            <i class="fas fa-check-circle mt-0.5"></i>
+            <span>Enable push notifications for important updates</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <i class="fas fa-check-circle mt-0.5"></i>
+            <span>Customize which notifications you receive</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <i class="fas fa-check-circle mt-0.5"></i>
+            <span>Check notifications regularly to stay updated</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

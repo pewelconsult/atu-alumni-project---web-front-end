@@ -1,0 +1,575 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="lg:ml-64 transition-all duration-300">
+    <div class="p-4 md:p-6 lg:p-8">
+      <!-- Header -->
+      <div class="container mx-auto">
+        <div class="bg-gradient-to-r from-primary to-accent text-white rounded-2xl shadow-lg p-5 mb-6 slide-in relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+          <div class="relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+              <div>
+                <h1 class="text-2xl font-bold mb-2">Forums Management</h1>
+                <p class="opacity-90 text-sm">Manage forum categories, posts, and discussions</p>
+              </div>
+              <div class="flex space-x-3 mt-4 md:mt-0">
+                <button class="bg-white text-primary px-5 py-2.5 rounded-xl hover:bg-opacity-90 transition-all duration-300 font-medium shadow-sm text-sm flex items-center">
+                  <i class="fas fa-plus mr-2"></i>New Category
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="bg-white rounded-xl shadow-sm p-5 mb-6 slide-in border border-gray-100">
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <!-- Search Bar -->
+            <div class="relative flex-1 max-w-lg">
+              <input 
+                type="text" 
+                placeholder="Search forums, posts, or users..." 
+                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              >
+              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+            
+            <!-- Filter Dropdowns -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+              <div class="relative">
+                <select class="appearance-none w-full sm:w-40 pl-4 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-sm">
+                  <option value="all">All Categories</option>
+                  <option value="general">General</option>
+                  <option value="career">Career Advice</option>
+                  <option value="technical">Technical</option>
+                  <option value="alumni">Alumni News</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+              </div>
+              
+              <div class="relative">
+                <select class="appearance-none w-full sm:w-40 pl-4 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-sm">
+                  <option value="all">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="locked">Locked</option>
+                  <option value="pinned">Pinned</option>
+                  <option value="archived">Archived</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="flex overflow-x-auto mt-4 border-b border-gray-200 scrollbar-hide">
+            <button class="px-4 py-2 font-medium rounded-t-lg transition-colors duration-300 bg-primary text-white text-sm mr-2 whitespace-nowrap">
+              All Posts
+            </button>
+            <button class="px-4 py-2 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm mr-2 whitespace-nowrap">
+              Categories
+            </button>
+            <button class="px-4 py-2 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm mr-2 whitespace-nowrap">
+              Reported Content
+            </button>
+            <button class="px-4 py-2 font-medium text-gray-600 rounded-t-lg hover:bg-gray-100 transition-colors duration-300 text-sm whitespace-nowrap">
+              Statistics
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forums Statistics -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Total Posts</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">1,247</h3>
+              <p class="text-green-600 text-xs mt-1 flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i>15% from last week
+              </p>
+            </div>
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+              <i class="fas fa-comments text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Active Discussions</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">89</h3>
+              <p class="text-green-600 text-xs mt-1 flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i>8% from last week
+              </p>
+            </div>
+            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
+              <i class="fas fa-fire text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Categories</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">12</h3>
+              <p class="text-gray-500 text-xs mt-1 flex items-center">
+                <i class="fas fa-minus mr-1"></i>No change
+              </p>
+            </div>
+            <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
+              <i class="fas fa-folder text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Reported Posts</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">5</h3>
+              <p class="text-red-600 text-xs mt-1 flex items-center">
+                <i class="fas fa-arrow-down mr-1"></i>2 from yesterday
+              </p>
+            </div>
+            <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600">
+              <i class="fas fa-flag text-xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forum Posts Table -->
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[1000px]">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300">
+                    <span>Forum Post</span>
+                  </div>
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Replies</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Views</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Activity</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <!-- Post 1 -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-start space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center text-white">
+                        <i class="fas fa-thumbtack text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="flex items-center space-x-2">
+                          <h3 class="text-sm font-medium text-gray-900">Welcome to the Alumni Network!</h3>
+                          <span class="px-1.5 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full">Pinned</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1 line-clamp-1">Welcome all new alumni to our network. Please read this important information...</p>
+                        <div class="flex items-center space-x-4 mt-1 text-xs text-gray-400">
+                          <span>Started by Admin User</span>
+                          <span>•</span>
+                          <span>Jan 15, 2024</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    General
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">AD</div>
+                    <span class="text-sm text-gray-900">Admin User</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                  24
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  156
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  2 hours ago
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Active
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-1">
+                    <button class="text-blue-600 hover:text-blue-900 p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors duration-200" title="Edit Post">
+                      <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="text-purple-600 hover:text-purple-900 p-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors duration-200" title="View Replies">
+                      <i class="fas fa-comments text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1.5 rounded-lg bg-green-50 hover:bg-green-100 transition-colors duration-200" title="Unpin Post">
+                      <i class="fas fa-thumbtack text-sm"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 p-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-colors duration-200" title="Delete Post">
+                      <i class="fas fa-trash text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Post 2 -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-start space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-accent to-secondary rounded-xl flex items-center justify-center text-white">
+                        <i class="fas fa-lock text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="flex items-center space-x-2">
+                          <h3 class="text-sm font-medium text-gray-900">Job Opportunity: Senior Developer at TechCorp</h3>
+                          <span class="px-1.5 py-0.5 bg-red-100 text-red-800 text-xs rounded-full">Locked</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1 line-clamp-1">We're hiring senior developers with 5+ years experience in JavaScript and React...</p>
+                        <div class="flex items-center space-x-4 mt-1 text-xs text-gray-400">
+                          <span>Started by Kwame Mensah</span>
+                          <span>•</span>
+                          <span>Jan 14, 2024</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Career
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 bg-accent rounded-full flex items-center justify-center text-white text-xs font-bold">KM</div>
+                    <span class="text-sm text-gray-900">Kwame Mensah</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                  18
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  89
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  1 day ago
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                    Locked
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-1">
+                    <button class="text-blue-600 hover:text-blue-900 p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors duration-200" title="Edit Post">
+                      <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="text-purple-600 hover:text-purple-900 p-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors duration-200" title="View Replies">
+                      <i class="fas fa-comments text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1.5 rounded-lg bg-green-50 hover:bg-green-100 transition-colors duration-200" title="Unlock Post">
+                      <i class="fas fa-unlock text-sm"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 p-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-colors duration-200" title="Delete Post">
+                      <i class="fas fa-trash text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Post 3 -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-start space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-secondary to-primary rounded-xl flex items-center justify-center text-white">
+                        <i class="fas fa-star text-sm"></i>
+                      </div>
+                      <div>
+                        <h3 class="text-sm font-medium text-gray-900">Best practices for React performance optimization</h3>
+                        <p class="text-sm text-gray-500 mt-1 line-clamp-1">Sharing some insights on React performance optimization techniques that worked for our team...</p>
+                        <div class="flex items-center space-x-4 mt-1 text-xs text-gray-400">
+                          <span>Started by Ama Asante</span>
+                          <span>•</span>
+                          <span>Jan 13, 2024</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                    Technical
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 bg-secondary rounded-full flex items-center justify-center text-white text-xs font-bold">AA</div>
+                    <span class="text-sm text-gray-900">Ama Asante</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                  32
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  214
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  3 hours ago
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Active
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-1">
+                    <button class="text-blue-600 hover:text-blue-900 p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors duration-200" title="Edit Post">
+                      <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="text-purple-600 hover:text-purple-900 p-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors duration-200" title="View Replies">
+                      <i class="fas fa-comments text-sm"></i>
+                    </button>
+                    <button class="text-yellow-600 hover:text-yellow-900 p-1.5 rounded-lg bg-yellow-50 hover:bg-yellow-100 transition-colors duration-200" title="Pin Post">
+                      <i class="fas fa-thumbtack text-sm"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 p-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-colors duration-200" title="Delete Post">
+                      <i class="fas fa-trash text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Post 4 -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-start space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center text-white">
+                        <i class="fas fa-flag text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="flex items-center space-x-2">
+                          <h3 class="text-sm font-medium text-gray-900">Inappropriate content reported</h3>
+                          <span class="px-1.5 py-0.5 bg-orange-100 text-orange-800 text-xs rounded-full">Reported</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1 line-clamp-1">This post has been reported by multiple users for violating community guidelines...</p>
+                        <div class="flex items-center space-x-4 mt-1 text-xs text-gray-400">
+                          <span>Started by John Doe</span>
+                          <span>•</span>
+                          <span>Jan 12, 2024</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    General
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">JD</div>
+                    <span class="text-sm text-gray-900">John Doe</span>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                  8
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  67
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  2 days ago
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
+                    Under Review
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-1">
+                    <button class="text-blue-600 hover:text-blue-900 p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors duration-200" title="Review Post">
+                      <i class="fas fa-eye text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1.5 rounded-lg bg-green-50 hover:bg-green-100 transition-colors duration-200" title="Approve Post">
+                      <i class="fas fa-check text-sm"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 p-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-colors duration-200" title="Delete Post">
+                      <i class="fas fa-trash text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-white px-4 py-4 border-t border-gray-200">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-sm text-gray-700">
+              Showing <span class="font-medium">1</span> to <span class="font-medium">4</span> of <span class="font-medium">1,247</span> posts
+            </div>
+            <div class="flex space-x-1">
+              <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                Previous
+              </button>
+              <button class="px-3 py-1.5 border border-primary bg-primary text-white rounded-lg text-sm font-medium">
+                1
+              </button>
+              <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                2
+              </button>
+              <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                3
+              </button>
+              <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Section -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-lg font-bold text-gray-800">Forum Categories</h2>
+          <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors duration-300 text-sm flex items-center">
+            <i class="fas fa-plus mr-2"></i>New Category
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Category 1 -->
+          <div class="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-300">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                  <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="font-medium text-gray-900">General Discussion</h3>
+              </div>
+              <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">245 posts</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">General topics and discussions for all alumni</p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">Last post: 2 hours ago</span>
+              <div class="flex space-x-1">
+                <button class="text-blue-600 hover:text-blue-900 p-1" title="Edit Category">
+                  <i class="fas fa-edit text-sm"></i>
+                </button>
+                <button class="text-red-600 hover:text-red-900 p-1" title="Delete Category">
+                  <i class="fas fa-trash text-sm"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category 2 -->
+          <div class="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-300">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center text-green-600">
+                  <i class="fas fa-briefcase"></i>
+                </div>
+                <h3 class="font-medium text-gray-900">Career Advice</h3>
+              </div>
+              <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">189 posts</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">Career guidance, job opportunities, and professional development</p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">Last post: 1 day ago</span>
+              <div class="flex space-x-1">
+                <button class="text-blue-600 hover:text-blue-900 p-1" title="Edit Category">
+                  <i class="fas fa-edit text-sm"></i>
+                </button>
+                <button class="text-red-600 hover:text-red-900 p-1" title="Delete Category">
+                  <i class="fas fa-trash text-sm"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category 3 -->
+          <div class="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-300">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600">
+                  <i class="fas fa-code"></i>
+                </div>
+                <h3 class="font-medium text-gray-900">Technical Help</h3>
+              </div>
+              <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">156 posts</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">Technical questions and programming help</p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">Last post: 3 hours ago</span>
+              <div class="flex space-x-1">
+                <button class="text-blue-600 hover:text-blue-900 p-1" title="Edit Category">
+                  <i class="fas fa-edit text-sm"></i>
+                </button>
+                <button class="text-red-600 hover:text-red-900 p-1" title="Delete Category">
+                  <i class="fas fa-trash text-sm"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Actions -->
+      <div class="bg-white rounded-2xl shadow-sm p-6">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+          <div class="flex flex-col sm:flex-row items-center gap-4">
+            <span class="text-sm text-gray-600">3 posts selected</span>
+            <select class="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              <option>Bulk Actions</option>
+              <option>Pin Selected</option>
+              <option>Unpin Selected</option>
+              <option>Lock Selected</option>
+              <option>Unlock Selected</option>
+              <option>Move to Category</option>
+              <option>Delete Selected</option>
+            </select>
+            <button class="w-full sm:w-auto bg-primary text-white px-4 py-2.5 rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-300">
+              Apply
+            </button>
+          </div>
+          <button class="w-full lg:w-auto text-gray-500 hover:text-gray-700 text-sm flex items-center justify-center space-x-2 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-300">
+            <i class="fas fa-download"></i>
+            <span>Export Forum Data</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

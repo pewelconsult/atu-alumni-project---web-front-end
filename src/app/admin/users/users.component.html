@@ -1,0 +1,425 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="lg:ml-64 transition-all duration-300">
+    <div class="p-4 md:p-6 lg:p-8">
+      <!-- Header -->
+      <div class="container mx-auto">
+        <div class="bg-gradient-to-r from-primary to-accent text-white rounded-2xl shadow-lg p-5 mb-6 slide-in relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+          <div class="relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+              <div>
+                <h1 class="text-2xl font-bold mb-2">User Management</h1>
+                <p class="opacity-90 text-sm">Manage all users, alumni, and their permissions</p>
+              </div>
+              <button (click)="navigateToAddUser()" class="mt-4 md:mt-0 bg-white text-primary px-5 py-2.5 rounded-xl hover:bg-opacity-90 transition-all duration-300 font-medium shadow-sm text-sm flex items-center">
+                <i class="fas fa-user-plus mr-2"></i>Add New User
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="bg-white rounded-xl shadow-sm p-5 mb-6 slide-in border border-gray-100">
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <!-- Search Bar -->
+            <div class="relative flex-1 max-w-lg">
+              <input 
+                type="text" 
+                placeholder="Search users by name, email, or role..." 
+                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              >
+              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+            
+            <!-- Filter Dropdowns -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+              <div class="relative">
+                <select class="appearance-none w-full sm:w-40 pl-4 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-sm">
+                  <option value="all">All Roles</option>
+                  <option value="admin">Admin</option>
+                  <option value="alumni">Alumni</option>
+                  <option value="student">Student</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+              </div>
+              
+              <div class="relative">
+                <select class="appearance-none w-full sm:w-40 pl-4 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-sm">
+                  <option value="all">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Statistics -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Total Users</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">2,847</h3>
+              <p class="text-green-600 text-xs mt-1 flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i>12% from last month
+              </p>
+            </div>
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+              <i class="fas fa-users text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Active Alumni</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">1,924</h3>
+              <p class="text-green-600 text-xs mt-1 flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i>8% from last month
+              </p>
+            </div>
+            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
+              <i class="fas fa-user-graduate text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">New This Month</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">142</h3>
+              <p class="text-green-600 text-xs mt-1 flex items-center">
+                <i class="fas fa-arrow-up mr-1"></i>5% from last month
+              </p>
+            </div>
+            <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
+              <i class="fas fa-user-plus text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-500 text-sm font-medium">Pending Approval</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">23</h3>
+              <p class="text-red-600 text-xs mt-1 flex items-center">
+                <i class="fas fa-arrow-down mr-1"></i>3% from last month
+              </p>
+            </div>
+            <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600">
+              <i class="fas fa-clock text-xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[800px]">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded border-gray-300">
+                    <span>User</span>
+                  </div>
+                </th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Active</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <!-- User 1 - Admin -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">AD</div>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">Admin User</div>
+                        <div class="text-sm text-gray-500">adminatu.edu.gh</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                    Admin
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Active
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  2 hours ago
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  Jan 15, 2022
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button class="text-blue-600 hover:text-blue-900 p-1 rounded transition-colors duration-200" title="Edit User">
+                      <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1 rounded transition-colors duration-200" title="View Profile">
+                      <i class="fas fa-eye text-sm"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 p-1 rounded transition-colors duration-200" title="Delete User">
+                      <i class="fas fa-trash text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 2 - Alumni -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-accent to-secondary rounded-full flex items-center justify-center text-white font-bold">KM</div>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">Kwame Mensah</div>
+                        <div class="text-sm text-gray-500">kwame.mensahexample.com</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    Alumni
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Active
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  1 day ago
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  Mar 22, 2021
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button class="text-blue-600 hover:text-blue-900 p-1 rounded transition-colors duration-200" title="Edit User">
+                      <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1 rounded transition-colors duration-200" title="View Profile">
+                      <i class="fas fa-eye text-sm"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 p-1 rounded transition-colors duration-200" title="Delete User">
+                      <i class="fas fa-trash text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 3 - Alumni (Inactive) -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-secondary to-primary rounded-full flex items-center justify-center text-white font-bold">AA</div>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">Ama Asante</div>
+                        <div class="text-sm text-gray-500">ama.asanteexample.com</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    Alumni
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                    Inactive
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  3 weeks ago
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  Oct 5, 2022
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button class="text-blue-600 hover:text-blue-900 p-1 rounded transition-colors duration-200" title="Edit User">
+                      <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1 rounded transition-colors duration-200" title="View Profile">
+                      <i class="fas fa-eye text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1 rounded transition-colors duration-200" title="Reactivate User">
+                      <i class="fas fa-user-check text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 4 - Alumni -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">JD</div>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">John Doe</div>
+                        <div class="text-sm text-gray-500">john.doeexample.com</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    Alumni
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Active
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  3 days ago
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  Feb 18, 2020
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button class="text-blue-600 hover:text-blue-900 p-1 rounded transition-colors duration-200" title="Edit User">
+                      <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1 rounded transition-colors duration-200" title="View Profile">
+                      <i class="fas fa-eye text-sm"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 p-1 rounded transition-colors duration-200" title="Delete User">
+                      <i class="fas fa-trash text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 5 - Student -->
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 mr-3">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-10 h-10 bg-gradient-to-r from-accent to-secondary rounded-full flex items-center justify-center text-white font-bold">DB</div>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">David Brown</div>
+                        <div class="text-sm text-gray-500">david.brownexample.com</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                    Student
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                    Pending
+                  </span>
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  Never
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                  Aug 10, 2023
+                </td>
+                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button class="text-blue-600 hover:text-blue-900 p-1 rounded transition-colors duration-200" title="Edit User">
+                      <i class="fas fa-edit text-sm"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-900 p-1 rounded transition-colors duration-200" title="View Profile">
+                      <i class="fas fa-eye text-sm"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 p-1 rounded transition-colors duration-200" title="Delete User">
+                      <i class="fas fa-trash text-sm"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-white px-4 py-4 border-t border-gray-200">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-sm text-gray-700">
+              Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">2,847</span> users
+            </div>
+            <div class="flex space-x-1">
+              <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                Previous
+              </button>
+              <button class="px-3 py-1.5 border border-primary bg-primary text-white rounded-lg text-sm font-medium">
+                1
+              </button>
+              <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                2
+              </button>
+              <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                3
+              </button>
+              <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Actions -->
+      <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+          <div class="flex flex-col sm:flex-row items-center gap-4">
+            <span class="text-sm text-gray-600">3 users selected</span>
+            <select class="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              <option>Bulk Actions</option>
+              <option>Activate</option>
+              <option>Deactivate</option>
+              <option>Change Role</option>
+              <option>Delete</option>
+            </select>
+            <button class="w-full sm:w-auto bg-primary text-white px-4 py-2.5 rounded-lg text-sm hover:bg-opacity-90 transition-colors duration-300">
+              Apply
+            </button>
+          </div>
+          <button class="w-full lg:w-auto text-gray-500 hover:text-gray-700 text-sm flex items-center justify-center space-x-2 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-300">
+            <i class="fas fa-download"></i>
+            <span>Export Users</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
