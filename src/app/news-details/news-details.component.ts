@@ -139,6 +139,9 @@ export class NewsDetailsComponent implements OnInit {
   /**
    * Add comment
    */
+ /**
+   * Add comment
+   */
   addComment(): void {
     if (!this.currentUser || !this.article) {
       this.router.navigate(['/login']);
@@ -154,7 +157,15 @@ export class NewsDetailsComponent implements OnInit {
     }).subscribe({
       next: (response: ApiResponse<NewsComment>) => {
         if (response.success && response.data) {
-          this.comments.unshift(response.data);
+          // Enhance the comment with current user's info
+          const enhancedComment: NewsComment = {
+            ...response.data,
+            author_name: `${this.currentUser!.first_name} ${this.currentUser!.last_name}`,
+            author_picture: this.currentUser!.profile_picture,
+            user_has_liked: false
+          };
+          
+          this.comments.unshift(enhancedComment);
           this.newComment = '';
           if (this.article) {
             this.article.comments_count++;
