@@ -12,28 +12,46 @@
       
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center space-x-8">
-        <a routerLink="/" routerLinkActive="font-bold text-yellow-300" class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
+        <a 
+          routerLink="/" 
+          routerLinkActive="font-bold text-yellow-300"
+          [routerLinkActiveOptions]="{exact: true}"
+          class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
           <i class="fas fa-home text-xl"></i>
           <span class="text-xs mt-1">Home</span>
         </a>
-        <a routerLink="/networks" class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
+        <a 
+          routerLink="/networks" 
+          routerLinkActive="font-bold text-yellow-300"
+          class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
           <i class="fas fa-users text-xl"></i>
           <span class="text-xs mt-1">Networks</span>
         </a>
-        <a routerLink="/events" class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
+        <a 
+          routerLink="/events" 
+          routerLinkActive="font-bold text-yellow-300"
+          class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
           <i class="fas fa-calendar-alt text-xl"></i>
           <span class="text-xs mt-1">Events</span>
         </a>
-        <a routerLink="/jobs" class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
+        <a 
+          routerLink="/jobs" 
+          routerLinkActive="font-bold text-yellow-300"
+          class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
           <i class="fas fa-briefcase text-xl"></i>
           <span class="text-xs mt-1">Jobs</span>
         </a>
-        <!-- News Link Added -->
-        <a routerLink="/news" class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
+        <a 
+          routerLink="/news" 
+          routerLinkActive="font-bold text-yellow-300"
+          class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
           <i class="fas fa-newspaper text-xl"></i>
           <span class="text-xs mt-1">News</span>
         </a>
-        <a routerLink="/forums" class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
+        <a 
+          routerLink="/forum" 
+          routerLinkActive="font-bold text-yellow-300"
+          class="hover:text-secondary transition-colors duration-300 flex flex-col items-center">
           <i class="fas fa-comments text-xl"></i>
           <span class="text-xs mt-1">Forums</span>
         </a>
@@ -41,18 +59,65 @@
       
       <!-- User Menu -->
       <div class="flex items-center space-x-4">
-        <button routerLink="/notifications" class="relative hover:text-secondary transition-colors duration-300" >
+        <button 
+          routerLink="/notifications" 
+          class="relative hover:text-secondary transition-colors duration-300">
           <i class="fas fa-bell text-xl"></i>
           <span class="absolute -top-1 -right-1 bg-secondary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
         </button>
-        <button routerLink="/messages" class="relative hover:text-secondary transition-colors duration-300" >
+        <button 
+          routerLink="/messages" 
+          class="relative hover:text-secondary transition-colors duration-300">
           <i class="fas fa-envelope text-xl"></i>
           <span class="absolute -top-1 -right-1 bg-secondary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">5</span>
         </button>
+        
+        <!-- User Dropdown -->
         <div class="relative">
-          <button routerLink="/profile" class="flex flex-col items-center focus:outline-none">
-            <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-primary font-bold">JD</div>
+          <button 
+            (click)="toggleUserMenu()"
+            class="flex flex-col items-center focus:outline-none hover:opacity-80 transition-opacity">
+            <div 
+              *ngIf="currentUser?.profile_picture; else userInitials"
+              class="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
+              <img [src]="currentUser!.profile_picture" [alt]="currentUser!.first_name" class="w-full h-full object-cover">
+            </div>
+            <ng-template #userInitials>
+              <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-primary font-bold border-2 border-white">
+                {{ getUserInitials() }}
+              </div>
+            </ng-template>
           </button>
+
+          <!-- Dropdown Menu -->
+          <div 
+            *ngIf="showUserMenu"
+            class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50"
+            (clickOutside)="closeUserMenu()">
+            <div class="px-4 py-3 border-b border-gray-100">
+              <p class="text-sm font-semibold text-gray-800">{{ currentUser?.first_name }} {{ currentUser?.last_name }}</p>
+              <p class="text-xs text-gray-500">{{ currentUser?.email }}</p>
+            </div>
+            <button 
+              (click)="goToProfile()"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+              <i class="fas fa-user mr-3"></i>
+              My Profile
+            </button>
+            <button 
+              (click)="goToSettings()"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+              <i class="fas fa-cog mr-3"></i>
+              Settings
+            </button>
+            <div class="border-t border-gray-100 mt-2"></div>
+            <button 
+              (click)="logout()"
+              class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+              <i class="fas fa-sign-out-alt mr-3"></i>
+              Logout
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -61,27 +126,46 @@
 
 <!-- Mobile Bottom Navigation -->
 <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-3 px-6 flex justify-between items-center md:hidden z-40">
-  <a routerLink="/" class="flex flex-col items-center text-primary">
+  <a 
+    routerLink="/" 
+    routerLinkActive="text-primary"
+    [routerLinkActiveOptions]="{exact: true}"
+    class="flex flex-col items-center text-gray-500">
     <i class="fas fa-home text-lg"></i>
     <span class="text-xs mt-1">Home</span>
   </a>
-  <a routerLink="/networks" class="flex flex-col items-center text-gray-500">
+  <a 
+    routerLink="/networks" 
+    routerLinkActive="text-primary"
+    class="flex flex-col items-center text-gray-500">
     <i class="fas fa-users text-lg"></i>
     <span class="text-xs mt-1">Networks</span>
   </a>
-  <a routerLink="/events" class="flex flex-col items-center text-gray-500">
+  <a 
+    routerLink="/events" 
+    routerLinkActive="text-primary"
+    class="flex flex-col items-center text-gray-500">
     <i class="fas fa-calendar-alt text-lg"></i>
     <span class="text-xs mt-1">Events</span>
   </a>
-  <a routerLink="/jobs" class="flex flex-col items-center text-gray-500">
+  <a 
+    routerLink="/jobs" 
+    routerLinkActive="text-primary"
+    class="flex flex-col items-center text-gray-500">
     <i class="fas fa-briefcase text-lg"></i>
     <span class="text-xs mt-1">Jobs</span>
   </a>
-  <a routerLink="/news" class="flex flex-col items-center text-gray-500">
+  <a 
+    routerLink="/news" 
+    routerLinkActive="text-primary"
+    class="flex flex-col items-center text-gray-500">
     <i class="fas fa-newspaper text-lg"></i>
     <span class="text-xs mt-1">News</span>
   </a>
-  <a routerLink="/forums" class="flex flex-col items-center text-gray-500">
+  <a 
+    routerLink="/forum" 
+    routerLinkActive="text-primary"
+    class="flex flex-col items-center text-gray-500">
     <i class="fas fa-comments text-lg"></i>
     <span class="text-xs mt-1">Forums</span>
   </a>

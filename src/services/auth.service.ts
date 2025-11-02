@@ -189,4 +189,20 @@ export class AuthService {
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
+
+  updateCurrentUser(user: User): void {
+  if (this.isBrowser) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+  this.currentUserSubject.next(user);
+}
+
+/**
+ * Get current user ID (synchronous)
+ */
+getCurrentUserId(): number | null {
+  const user = this.currentUserSubject.value;
+  return user?.id || null;
+}
+
 }

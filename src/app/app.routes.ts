@@ -4,7 +4,6 @@ import { NetworksComponent } from './networks/networks.component';
 import { EventsComponent } from './events/events.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { NewsComponent } from './news/news.component';
-import { ForumComponent } from './forum/forum.component';
 import { MessagesComponent } from './messages/messages.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -22,6 +21,8 @@ import { NewsFormComponent } from './admin/news-form/news-form.component';
 import { LoginComponent } from './login/login.component'; 
 import { EventDetailsComponent } from './event-details/event-details.component';
 import { NewsDetailsComponent } from './news-details/news-details.component';
+import { ForumTopicDetailComponent } from './forum-topic-detail/forum-topic-detail.component';
+import { ForumComponent } from './forum/forum.component';
 
 export const routes: Routes = [
   // Root redirect
@@ -37,14 +38,15 @@ export const routes: Routes = [
   { path: 'events/:id', component: EventDetailsComponent },
   { path: 'news', component: NewsComponent },
   { path: 'news/:id', component: NewsDetailsComponent },
-  { path: 'forums', component: ForumComponent },
+  { path: 'forum', component: ForumComponent },
+  { path: 'forum/posts/:id', component: ForumTopicDetailComponent },
   { path: 'messages', component: MessagesComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'notifications', component: NotificationsComponent },
   
-  // Job routes - IMPORTANT: Specific routes BEFORE parameterized routes
+  // Job routes
   { path: 'jobs', component: JobsComponent },
-  { path: 'jobs/:id', component: JobDetailsComponent }, // ✅ Must be AFTER 'jobs' but BEFORE wildcard
+  { path: 'jobs/:id', component: JobDetailsComponent },
   
   // Admin routes
   { path: 'dashboard', component: DashboardComponent },
@@ -58,6 +60,6 @@ export const routes: Routes = [
   { path: 'adminNews', component: NewsManagementComponent },
   { path: 'newsForm', component: NewsFormComponent },
   
-  // Wildcard route - MUST BE LAST
+  // Wildcard route
   { path: '**', redirectTo: '/home' }
 ];
