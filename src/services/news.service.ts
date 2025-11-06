@@ -153,4 +153,48 @@ export class NewsService {
       params: { user_id: userId.toString() }
     });
   }
+
+
+  /**
+ * Create article (Admin only)
+ */
+createArticle(articleData: any): Observable<ApiResponse<NewsArticle>> {
+  return this.http.post<ApiResponse<NewsArticle>>(this.apiUrl, articleData);
+}
+
+/**
+ * Update article (Admin only)
+ */
+updateArticle(id: number, data: Partial<NewsArticle>): Observable<ApiResponse<NewsArticle>> {
+  return this.http.put<ApiResponse<NewsArticle>>(`${this.apiUrl}/${id}`, data);
+}
+
+/**
+ * Delete article (Admin only)
+ */
+deleteArticle(id: number): Observable<ApiResponse> {
+  return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}`);
+}
+
+/**
+ * Publish article (Admin only)
+ */
+publishArticle(id: number): Observable<ApiResponse<NewsArticle>> {
+  return this.http.post<ApiResponse<NewsArticle>>(`${this.apiUrl}/${id}/publish`, {});
+}
+
+/**
+ * Unpublish article (Admin only)
+ */
+unpublishArticle(id: number): Observable<ApiResponse<NewsArticle>> {
+  return this.http.post<ApiResponse<NewsArticle>>(`${this.apiUrl}/${id}/unpublish`, {});
+}
+
+/**
+ * Get news statistics
+ */
+getNewsStats(): Observable<ApiResponse<any>> {
+  return this.http.get<ApiResponse<any>>(`${this.apiUrl}/stats`);
+}
+
 }

@@ -1,4 +1,6 @@
 export interface NewsArticle {
+  keywords: any;
+  meta_description: any;
   id: number;
   author_id: number;
   author_name?: string;

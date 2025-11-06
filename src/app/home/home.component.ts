@@ -7,7 +7,7 @@ import { AlumniEvent } from '../../models/event';
 import { Job } from '../../models/job';
 import { ForumPost } from '../../models/forum';
 import { AuthService } from '../../services/auth.service';
-import { NewsService } from '../../services/news.service'; // Fixed: was .spec
+import { NewsService } from '../../services/news.service';
 import { EventsService } from '../../services/events.service';
 import { JobsService } from '../../services/jobs.service';
 import { ForumService } from '../../services/forum.service';
@@ -16,7 +16,7 @@ import { ApiResponse } from '../../models/api-response';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule], // Added RouterModule
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -61,8 +61,7 @@ export class HomeComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       if (user) {
-        this.loadSavedJobIds(); // Load saved job IDs for heart icons
-        this.loadMyEvents();
+        this.loadSavedJobIds();
         this.loadSavedJobs();
       }
     });
@@ -260,7 +259,6 @@ export class HomeComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.showToast('Job saved successfully!', 'success');
-          // Update recentJobs if needed
           const job = this.recentJobs[index];
           if (job) job.is_saved = true;
         }
@@ -294,7 +292,6 @@ export class HomeComponent implements OnInit {
    * Show toast message
    */
   private showToast(message: string, type: 'success' | 'warning' | 'error' = 'success'): void {
-    // Replace with real toast service (e.g. NgToastService, MatSnackBar)
     alert(message);
   }
 
@@ -355,5 +352,44 @@ export class HomeComponent implements OnInit {
     const program = this.currentUser.program_of_study || 'Alumni';
     const year = this.currentUser.graduation_year;
     return year ? `${program}, ${year}` : program;
+  }
+
+  /**
+   * Get profile picture URL
+   */
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    if (!picturePath) {
+      return '';
+    }
+    
+    if (picturePath.startsWith('http://') || picturePath.startsWith('https://')) {
+      return picturePath;
+    }
+    
+    const backendUrl = 'http://localhost:8080';
+    
+    if (picturePath.startsWith('/api')) {
+      return `${backendUrl}${picturePath}`;
+    }
+    
+    if (picturePath.startsWith('/uploads')) {
+      return `${backendUrl}/api${picturePath}`;
+    }
+    
+    return `${backendUrl}/api${picturePath}`;
+  }
+
+  /**
+   * Check if current user has profile picture
+   */
+  hasProfilePicture(): boolean {
+    return !!(this.currentUser?.profile_picture);
+  }
+
+  /**
+   * Get current user profile picture
+   */
+  getCurrentUserProfilePicture(): string {
+    return this.getProfilePictureUrl(this.currentUser?.profile_picture);
   }
 }

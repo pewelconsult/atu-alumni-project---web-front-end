@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { ConnectionService } from '../../services/connection.service';
 import { User } from '../../models/user';
 import { ApiResponse } from '../../models/api-response';
 
@@ -18,58 +20,404 @@ import { ApiResponse } from '../../models/api-response';
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   user: User | null = null;
+  currentUser: User | null = null;
   loading = true;
   error: string | null = null;
-
+  
   isEditing = false;
+  isOwnProfile = false;
+  isConnected = false;
+  hasPendingRequest = false;
   editForm: Partial<User> = {};
-
-  // Unsubscribe subject (same pattern as your other components)
+  
+  // Image upload
+  profilePictureFile: File | null = null;
+  profilePicturePreview: string | null = null;
+  coverPhotoFile: File | null = null;
+  coverPhotoPreview: string | null = null;
+  uploadingProfilePicture = false;
+  uploadingCoverPhoto = false;
+  
+  // Unsubscribe subject
   private destroy$ = new Subject<void>();
-
+  
   constructor(
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private connectionService: ConnectionService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
-
+  
   ngOnInit(): void {
-    // EXACTLY SAME PATTERN AS HOME COMPONENT
+    // Get current logged-in user
     this.authService.currentUser$.pipe(
       takeUntil(this.destroy$)
-    ).subscribe(user => {
-      if (user) {
-        this.user = user;                    // Use cached user from AuthService
-        this.editForm = { ...user };         // Copy for editing
-        this.loading = false;
-      } else {
-        this.error = 'Please log in to view your profile';
-        this.loading = false;
-      }
+    ).subscribe(loggedInUser => {
+      this.currentUser = loggedInUser;
+      
+      // Check if there's a user ID in the route
+      this.route.paramMap.pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(params => {
+        const userId = params.get('id');
+        
+        if (userId) {
+          // Viewing someone else's profile
+          this.loadUserProfile(parseInt(userId));
+        } else if (loggedInUser) {
+          // Viewing own profile (no ID in route)
+          this.isOwnProfile = true;
+          this.user = loggedInUser;
+          this.editForm = { ...loggedInUser };
+          this.loading = false;
+        } else {
+          this.error = 'Please log in to view profiles';
+          this.loading = false;
+        }
+      });
     });
   }
-
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
+  
+  /**
+   * Load a specific user's profile
+   */
+  loadUserProfile(userId: number): void {
+    this.loading = true;
+    this.isOwnProfile = userId === this.currentUser?.id;
+    
+    this.userService.getUserById(userId).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (response: ApiResponse<User>) => {
+        if (response.success && response.data) {
+          this.user = response.data;
+          this.editForm = { ...response.data };
+          
+          // Check connection status if not own profile
+          if (!this.isOwnProfile && this.currentUser) {
+            this.checkConnectionStatus();
+          }
+        } else {
+          this.error = 'User not found';
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading profile:', err);
+        this.error = 'Failed to load profile';
+        this.loading = false;
+      }
+    });
+  }
+  
+  /**
+   * Check if connected with this user
+   */
+  checkConnectionStatus(): void {
+    if (!this.currentUser || !this.user) return;
+    
+    // Check if already connected
+    this.connectionService.getMyConnections(1, 100, '').subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.isConnected = response.data.some(conn => conn.user.id === this.user?.id);
+        }
+      }
+    });
+    
+    // Check if there's a pending request
+    this.connectionService.getSentRequests().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.hasPendingRequest = response.data.some(req => req.receiver_id === this.user?.id);
+        }
+      }
+    });
+  }
+  
+  /**
+   * Handle profile picture file selection
+   */
+  onProfilePictureSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+      
+      // Validate file size (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB');
+        return;
+      }
+      
+      this.profilePictureFile = file;
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.profilePicturePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  /**
+   * Handle cover photo file selection
+   */
+  onCoverPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+      
+      // Validate file size (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Image size must be less than 10MB');
+        return;
+      }
+      
+      this.coverPhotoFile = file;
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.coverPhotoPreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  /**
+   * Upload profile picture
+   */
+  uploadProfilePicture(): void {
+    if (!this.profilePictureFile || !this.user?.id) return;
+    
+    this.uploadingProfilePicture = true;
+    
+    this.userService.uploadProfilePicture(this.profilePictureFile).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          console.log('Upload response:', response.data); // Debug
+          
+          // Update the edit form with new profile picture URL
+          this.editForm.profile_picture = response.data.url;
+          
+          // Now save the profile to persist the image URL
+          this.userService.updateUser(this.user!.id, { profile_picture: response.data.url }).subscribe({
+            next: (updateResponse) => {
+              if (updateResponse.success && updateResponse.data) {
+                // Update the user object
+                this.user = updateResponse.data;
+                this.authService.updateCurrentUser(updateResponse.data);
+                
+                // Clear the file and preview
+                this.profilePictureFile = null;
+                this.profilePicturePreview = null;
+                
+                alert('Profile picture uploaded successfully!');
+              }
+              this.uploadingProfilePicture = false;
+            },
+            error: (err) => {
+              console.error('Update error:', err);
+              alert('Image uploaded but failed to save to profile');
+              this.uploadingProfilePicture = false;
+            }
+          });
+        } else {
+          alert('Failed to upload profile picture');
+          this.uploadingProfilePicture = false;
+        }
+      },
+      error: (err) => {
+        console.error('Upload error:', err);
+        alert('Failed to upload profile picture');
+        this.uploadingProfilePicture = false;
+      }
+    });
+  }
+  
+  /**
+   * Upload cover photo
+   */
+  uploadCoverPhoto(): void {
+    if (!this.coverPhotoFile || !this.user?.id) return;
+    
+    this.uploadingCoverPhoto = true;
+    
+    this.userService.uploadCoverPhoto(this.coverPhotoFile).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          // Update the edit form with new cover photo URL
+          this.editForm.cover_photo = response.data.url;
+          
+          // Update the user object
+          if (this.user) {
+            this.user.cover_photo = response.data.url;
+            this.authService.updateCurrentUser(this.user);
+          }
+          
+          // Clear the file and preview
+          this.coverPhotoFile = null;
+          this.coverPhotoPreview = null;
+          
+          alert('Cover photo uploaded successfully!');
+        } else {
+          alert('Failed to upload cover photo');
+        }
+        this.uploadingCoverPhoto = false;
+      },
+      error: (err) => {
+        console.error('Upload error:', err);
+        alert('Failed to upload cover photo');
+        this.uploadingCoverPhoto = false;
+      }
+    });
+  }
+  
+  /**
+   * Remove profile picture preview
+   */
+  removeProfilePicturePreview(): void {
+    this.profilePictureFile = null;
+    this.profilePicturePreview = null;
+  }
+  
+  /**
+   * Remove cover photo preview
+   */
+  removeCoverPhotoPreview(): void {
+    this.coverPhotoFile = null;
+    this.coverPhotoPreview = null;
+  }
+  
+  /**
+   * Get full profile picture URL
+   */
+  getProfilePictureUrl(): string {
+    // If there's a preview (during upload), show it
+    if (this.profilePicturePreview) {
+      return this.profilePicturePreview;
+    }
+    
+    // Get the profile picture from user
+    const picturePath = this.user?.profile_picture;
+    
+    console.log('🖼️ Profile picture path:', picturePath); // Debug
+    
+    // If no picture, return default
+    if (!picturePath) {
+      return 'assets/images/default-avatar.png';
+    }
+    
+    // If it's already a full URL (starts with http/https), return as-is
+    if (picturePath.startsWith('http://') || picturePath.startsWith('https://')) {
+      console.log('✅ Using full URL:', picturePath);
+      return picturePath;
+    }
+    
+    // For development, construct the full URL
+    // Your backend is running on http://localhost:8080
+    const backendUrl = 'http://localhost:8080';
+    
+    // If path starts with /api, use it directly
+    if (picturePath.startsWith('/api')) {
+      const fullUrl = `${backendUrl}${picturePath}`;
+      console.log('✅ Constructed URL (with /api):', fullUrl);
+      return fullUrl;
+    }
+    
+    // If path starts with /uploads, add /api prefix
+    if (picturePath.startsWith('/uploads')) {
+      const fullUrl = `${backendUrl}/api${picturePath}`;
+      console.log('✅ Constructed URL (added /api):', fullUrl);
+      return fullUrl;
+    }
+    
+    // Otherwise, add /api prefix
+    const fullUrl = `${backendUrl}/api${picturePath}`;
+    console.log('✅ Constructed URL (default):', fullUrl);
+    return fullUrl;
+  }
+  
+  /**
+   * Get full cover photo URL
+   */
+  getCoverPhotoUrl(): string {
+    if (this.coverPhotoPreview) {
+      return this.coverPhotoPreview;
+    }
+    return this.userService.getFullImageUrl(this.user?.cover_photo);
+  }
+  
+  /**
+   * Send connection request
+   */
+  sendConnectionRequest(): void {
+    if (!this.user || !this.currentUser) return;
+    
+    this.connectionService.sendConnectionRequest(this.user.id).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.hasPendingRequest = true;
+          alert('Connection request sent!');
+        }
+      },
+      error: (err) => {
+        console.error('Error sending request:', err);
+        alert('Failed to send connection request');
+      }
+    });
+  }
+  
+  /**
+   * Message user
+   */
+  messageUser(): void {
+    if (!this.user) return;
+    this.router.navigate(['/messages'], { queryParams: { user: this.user.id } });
+  }
+  
+  /**
+   * Go back
+   */
+  goBack(): void {
+    this.router.navigate(['/networks']);
+  }
+  
   toggleEdit(): void {
     this.isEditing = !this.isEditing;
     if (this.isEditing && this.user) {
       this.editForm = { ...this.user };
     }
   }
-
+  
   saveProfile(): void {
     if (!this.user?.id) return;
-
+    
     this.userService.updateUser(this.user.id, this.editForm).subscribe({
       next: (response: ApiResponse<User>) => {
         if (response.success && response.data) {
-          // Update BOTH local user AND AuthService cache
           this.user = response.data;
           this.editForm = { ...response.data };
-          this.authService.updateCurrentUser(response.data); // Update AuthService cache
+          this.authService.updateCurrentUser(response.data);
           this.isEditing = false;
           alert('Profile updated successfully!');
         } else {
@@ -82,27 +430,49 @@ export class ProfileComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+  
   cancelEdit(): void {
     this.isEditing = false;
+    this.profilePictureFile = null;
+    this.profilePicturePreview = null;
+    this.coverPhotoFile = null;
+    this.coverPhotoPreview = null;
   }
-
+  
   getInitials(): string {
     if (!this.user) return '??';
     const first = this.user.first_name?.[0] || '';
     const last = this.user.last_name?.[0] || '';
     return (first + last).toUpperCase();
   }
-
+  
   getUserFullName(): string {
     if (!this.user) return 'User';
     return `${this.user.first_name} ${this.user.last_name}`.trim();
   }
-
+  
   getUserGraduationInfo(): string {
     if (!this.user) return '';
     const program = this.user.program_of_study || 'Alumni';
     const year = this.user.graduation_year;
     return year ? `${program}, ${year}` : program;
+  }
+  
+  // Debug helpers (temporary)
+  getEnvironmentApiUrl(): string {
+    return this.userService.getBaseUrl();
+  }
+  
+  onImageError(event: Event): void {
+    console.error('❌ Image failed to load');
+    const img = event.target as HTMLImageElement;
+    console.error('Failed URL:', img.src);
+    console.error('User profile_picture value:', this.user?.profile_picture);
+  }
+  
+  onImageLoad(event: Event): void {
+    console.log('✅ Image loaded successfully');
+    const img = event.target as HTMLImageElement;
+    console.log('Loaded from URL:', img.src);
   }
 }

@@ -23,6 +23,11 @@ import { EventDetailsComponent } from './event-details/event-details.component';
 import { NewsDetailsComponent } from './news-details/news-details.component';
 import { ForumTopicDetailComponent } from './forum-topic-detail/forum-topic-detail.component';
 import { ForumComponent } from './forum/forum.component';
+import { TracerPageComponent } from './tracer-page/tracer-page.component';
+import { SuggestedNetworksComponent } from './suggested-networks/suggested-networks.component';
+import { SettingsComponent } from './admin/settings/settings.component';
+import { ReportsComponent } from './admin/reports/reports.component';
+import { AdminTracerComponent } from './admin/admin-tracer/admin-tracer.component';
 
 export const routes: Routes = [
   // Root redirect
@@ -35,30 +40,38 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'networks', component: NetworksComponent },
   { path: 'events', component: EventsComponent },
-  { path: 'events/:id', component: EventDetailsComponent },
+  { path: 'events/:id', component: EventDetailsComponent, data: { prerender: false }},
   { path: 'news', component: NewsComponent },
-  { path: 'news/:id', component: NewsDetailsComponent },
+  { path: 'news/:id', component: NewsDetailsComponent, data: { prerender: false }},
   { path: 'forum', component: ForumComponent },
-  { path: 'forum/posts/:id', component: ForumTopicDetailComponent },
+  { path: 'forum/posts/:id', component: ForumTopicDetailComponent, data: { prerender: false }},
   { path: 'messages', component: MessagesComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'profile/:id', component: ProfileComponent },
+  { path: 'tracer', component: TracerPageComponent },
   { path: 'notifications', component: NotificationsComponent },
   
   // Job routes
   { path: 'jobs', component: JobsComponent },
   { path: 'jobs/:id', component: JobDetailsComponent },
   
+  
   // Admin routes
   { path: 'dashboard', component: DashboardComponent },
   { path: 'users', component: UsersComponent },
   { path: 'adminEvents', component: AdminEventsComponent },
-  { path: 'createEvent', component: CreateEventComponent },
+  { path: 'admin/create-event', component: CreateEventComponent },
   { path: 'addUser', component: AddUserComponent },
   { path: 'adminJob', component: JobManagementComponent },
   { path: 'postJob', component: PostJobComponent },
   { path: 'adminForum', component: ForumManagementComponent },
+  { path: 'adminTracer', component: AdminTracerComponent },
   { path: 'adminNews', component: NewsManagementComponent },
   { path: 'newsForm', component: NewsFormComponent },
+  { path: 'reports', component: ReportsComponent },
+  { path: 'settings', component: SettingsComponent },
+  
+  { path: 'suggested-networks', component: SuggestedNetworksComponent },
   
   // Wildcard route
   { path: '**', redirectTo: '/home' }

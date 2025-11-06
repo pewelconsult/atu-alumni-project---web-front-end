@@ -102,4 +102,25 @@ export class JobsService {
   return this.http.get<ApiResponse<number[]>>(`${this.apiUrl}/saved/ids`);
 }
 
+/**
+ * Delete job (Admin only)
+ */
+deleteJob(id: number): Observable<ApiResponse> {
+  return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}`);
+}
+
+/**
+ * Update job (Admin only)
+ */
+updateJob(id: number, data: Partial<Job>): Observable<ApiResponse<Job>> {
+  return this.http.put<ApiResponse<Job>>(`${this.apiUrl}/${id}`, data);
+}
+
+
+/**
+ * Create new job (Admin only)
+ */
+createJob(jobData: any): Observable<ApiResponse<Job>> {
+  return this.http.post<ApiResponse<Job>>(this.apiUrl, jobData);
+}
 }

@@ -186,4 +186,26 @@ export class EventsService {
       params: { user_id: userId.toString() }
     });
   }
+
+
+  /**
+ * Delete event (Admin only)
+ */
+deleteEvent(id: number): Observable<ApiResponse> {
+  return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}`);
+}
+
+/**
+ * Get event stats
+ */
+getEventStats(): Observable<ApiResponse<any>> {
+  return this.http.get<ApiResponse<any>>(`${this.apiUrl}/stats`);
+}
+
+/**
+ * Create new event (Admin only)
+ */
+createEvent(eventData: any): Observable<ApiResponse<AlumniEvent>> {
+  return this.http.post<ApiResponse<AlumniEvent>>(this.apiUrl, eventData);
+}
 }

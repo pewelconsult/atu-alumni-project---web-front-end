@@ -40,9 +40,20 @@
         <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover slide-in">
           <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white">
             <div class="flex items-center space-x-4">
-              <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold text-xl">
-                {{ getUserInitials() }}
+
+              <div *ngIf="hasProfilePicture(); else userInitials" 
+                  class="w-16 h-16 rounded-full overflow-hidden border-2 border-white">
+                <img [src]="getCurrentUserProfilePicture()" 
+                    [alt]="getUserFullName()" 
+                    class="w-full h-full object-cover"
+                    (error)="$any($event.target).style.display='none'; $any($event.target).nextElementSibling.style.display='flex'">
               </div>
+              <ng-template #userInitials>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold text-xl">
+                  {{ getUserInitials() }}
+                </div>
+              </ng-template>
+
               <div>
                 <h3 class="font-bold text-lg">{{ getUserFullName() }}</h3>
                 <p class="text-sm opacity-90">{{ getUserGraduationInfo() }}</p>
@@ -158,13 +169,26 @@
           <div class="p-4">
             <div class="flex justify-between items-start mb-3">
               <div class="flex space-x-3">
+                
+                <div *ngIf="news.author_picture; else authorInitials" 
+                  class="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
+                <img [src]="getProfilePictureUrl(news.author_picture)" 
+                    [alt]="news.author_name || 'Author'" 
+                    class="w-full h-full object-cover"
+                    (error)="$any($event.target).style.display='none'">
+              </div>
+              <ng-template #authorInitials>
                 <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
                   {{ news.author_name ? news.author_name.substring(0, 2).toUpperCase() : 'AT' }}
                 </div>
-                <div>
-                  <h4 class="font-bold">{{ news.author_name || 'Alumni Team' }}</h4>
-                  <p class="text-sm text-gray-500">{{ formatDate(news.published_at) }}</p>
-                </div>
+              </ng-template>
+              
+              <div>
+                <h4 class="font-bold">{{ news.author_name || 'Alumni Team' }}</h4>
+                <p class="text-sm text-gray-500">{{ formatDate(news.published_at) }}</p>
+              </div>
+
+
               </div>
             </div>
             

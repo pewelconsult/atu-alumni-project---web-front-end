@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs'; // ✅ Import forkJoin
+import { forkJoin } from 'rxjs';
 import { Connection, ConnectionRequest, ConnectionStats } from '../../models/connection';
 import { User } from '../../models/user';
 import { ConnectionService } from '../../services/connection.service';
@@ -40,7 +40,7 @@ export class NetworksComponent implements OnInit {
   isLoadingRequests = false;
   isLoadingConnections = false;
   isLoadingSuggestions = false;
-  isInitialLoading = true; // ✅ Track initial page load
+  isInitialLoading = true;
   
   // Error handling
   errorMessage = '';
@@ -61,13 +61,13 @@ export class NetworksComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       if (user) {
-        this.loadAllData(); // ✅ Load everything at once
+        this.loadAllData();
       }
     });
   }
 
   /**
-   * ✅ Load all data at once to prevent flickering
+   * Load all data at once to prevent flickering
    */
   loadAllData(): void {
     this.isInitialLoading = true;
@@ -75,7 +75,6 @@ export class NetworksComponent implements OnInit {
     this.isLoadingConnections = true;
     this.isLoadingSuggestions = true;
 
-    // ✅ Load all data in parallel using forkJoin
     forkJoin({
       stats: this.connectionService.getConnectionStats(),
       pendingRequests: this.connectionService.getPendingRequests(),
@@ -83,27 +82,22 @@ export class NetworksComponent implements OnInit {
       connections: this.connectionService.getMyConnections(1, 20, this.searchQuery)
     }).subscribe({
       next: (results) => {
-        // Set stats
         if (results.stats.success && results.stats.data) {
           this.connectionStats = results.stats.data;
         }
 
-        // Set pending requests
         if (results.pendingRequests.success && results.pendingRequests.data) {
           this.pendingRequests = results.pendingRequests.data;
         }
 
-        // Set sent requests
         if (results.sentRequests.success && results.sentRequests.data) {
           this.sentRequests = results.sentRequests.data;
         }
 
-        // Set connections
         if (results.connections.success && results.connections.data) {
           this.myConnections = results.connections.data;
         }
 
-        // ✅ Now load suggestions with all data available
         this.loadSuggestedUsersWithFilter();
 
         this.isLoadingRequests = false;
@@ -121,12 +115,12 @@ export class NetworksComponent implements OnInit {
   }
 
   /**
-   * ✅ Load suggested users with proper filtering
+   * Load suggested users with proper filtering
    */
   loadSuggestedUsersWithFilter(): void {
     const params: any = {
       page: 1,
-      limit: 30 // ✅ Get more to have enough after filtering
+      limit: 30
     };
 
     if (this.selectedDepartment) params.program_of_study = this.selectedDepartment;
@@ -136,46 +130,21 @@ export class NetworksComponent implements OnInit {
     this.userService.getAllUsers(params).subscribe({
       next: (response: ApiResponse<User[]>) => {
         if (response.success && response.data) {
-          // ✅ Filter out with all data already loaded
           this.suggestedUsers = response.data.filter(user => {
-            // Not current user
             if (user.id === this.currentUser?.id) return false;
-            
-            // Not already connected
             if (this.myConnections.some(conn => conn.user.id === user.id)) return false;
-            
-            // Not in pending requests (received)
             if (this.pendingRequests.some(req => req.sender_id === user.id)) return false;
-            
-            // Not in sent requests (pending)
             if (this.sentRequests.some(req => req.receiver_id === user.id)) return false;
-            
             return true;
-          }).slice(0, 6); // Take only first 6 for display
+          }).slice(0, 6);
         }
         this.isLoadingSuggestions = false;
-        this.isInitialLoading = false; // ✅ Initial load complete
+        this.isInitialLoading = false;
       },
       error: (error: any) => {
         console.error('Error loading suggestions:', error);
         this.isLoadingSuggestions = false;
         this.isInitialLoading = false;
-      }
-    });
-  }
-
-  /**
-   * Load connection stats
-   */
-  loadConnectionStats(): void {
-    this.connectionService.getConnectionStats().subscribe({
-      next: (response: ApiResponse<ConnectionStats>) => {
-        if (response.success && response.data) {
-          this.connectionStats = response.data;
-        }
-      },
-      error: (error: any) => {
-        console.error('Error loading stats:', error);
       }
     });
   }
@@ -195,14 +164,10 @@ export class NetworksComponent implements OnInit {
     this.connectionService.acceptRequest(request.id).subscribe({
       next: (response: ApiResponse) => {
         if (response.success) {
-          // Remove from pending
           this.pendingRequests = this.pendingRequests.filter(r => r.id !== request.id);
-          
-          // Update stats
           this.connectionStats.pending_requests--;
           this.connectionStats.total_connections++;
           
-          // Reload connections
           this.connectionService.getMyConnections(1, 20, this.searchQuery).subscribe({
             next: (connResponse) => {
               if (connResponse.success && connResponse.data) {
@@ -249,15 +214,12 @@ export class NetworksComponent implements OnInit {
     this.connectionService.sendConnectionRequest(user.id).subscribe({
       next: (response: ApiResponse<ConnectionRequest>) => {
         if (response.success) {
-          // ✅ Immediately remove from suggestions
           this.suggestedUsers = this.suggestedUsers.filter(u => u.id !== user.id);
           
-          // ✅ Add to sent requests array
           if (response.data) {
             this.sentRequests.push(response.data);
           }
           
-          // ✅ Update stats
           this.connectionStats.sent_requests++;
           
           alert('Connection request sent!');
@@ -333,5 +295,42 @@ export class NetworksComponent implements OnInit {
     return colors[index % colors.length];
   }
 
-  
+  /**
+   * Get profile picture URL
+   */
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    if (!picturePath) {
+      return '';
+    }
+    
+    if (picturePath.startsWith('http://') || picturePath.startsWith('https://')) {
+      return picturePath;
+    }
+    
+    const backendUrl = 'http://localhost:8080';
+    
+    if (picturePath.startsWith('/api')) {
+      return `${backendUrl}${picturePath}`;
+    }
+    
+    if (picturePath.startsWith('/uploads')) {
+      return `${backendUrl}/api${picturePath}`;
+    }
+    
+    return `${backendUrl}/api${picturePath}`;
+  }
+
+  /**
+   * Check if user has profile picture
+   */
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return !!(picturePath);
+  }
+ 
+  /**
+   * View all suggestions
+   */
+  viewAllSuggestions(): void {
+    this.router.navigate(['/suggested-networks']);
+  }
 }
