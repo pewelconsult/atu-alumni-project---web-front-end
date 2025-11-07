@@ -1,18 +1,19 @@
+// src/app/components/news-details/news-details.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { User } from '../../models/user';
 import { NewsArticle, NewsComment } from '../../models/news';
 import { AuthService } from '../../services/auth.service';
 import { NewsService } from '../../services/news.service';
+import { ImageService } from '../../services/image.service'; // ✅ Add this
 import { ApiResponse } from '../../models/api-response';
-
 
 @Component({
   selector: 'app-news-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './news-details.component.html',
   styleUrl: './news-details.component.scss'
 })
@@ -24,13 +25,15 @@ export class NewsDetailsComponent implements OnInit {
   
   isLoading = false;
   isLoadingComments = false;
+  isSubmittingComment = false; // ✅ Add this
   errorMessage = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private newsService: NewsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private imageService: ImageService // ✅ Inject ImageService
   ) {}
 
   ngOnInit(): void {
@@ -139,9 +142,6 @@ export class NewsDetailsComponent implements OnInit {
   /**
    * Add comment
    */
- /**
-   * Add comment
-   */
   addComment(): void {
     if (!this.currentUser || !this.article) {
       this.router.navigate(['/login']);
@@ -150,6 +150,8 @@ export class NewsDetailsComponent implements OnInit {
 
     const comment = this.newComment.trim();
     if (!comment) return;
+
+    this.isSubmittingComment = true;
 
     this.newsService.addComment(this.article.id, {
       user_id: this.currentUser.id,
@@ -171,10 +173,12 @@ export class NewsDetailsComponent implements OnInit {
             this.article.comments_count++;
           }
         }
+        this.isSubmittingComment = false;
       },
       error: (error: any) => {
         console.error('Error adding comment:', error);
         alert('Failed to add comment');
+        this.isSubmittingComment = false;
       }
     });
   }
@@ -281,5 +285,28 @@ export class NewsDetailsComponent implements OnInit {
       'General': 'bg-gray-600 text-white'
     };
     return colorMap[category] || 'bg-gray-600 text-white';
+  }
+
+  // ✅ Add these image helper methods
+  
+  /**
+   * Get profile picture URL
+   */
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    return this.imageService.getProfilePictureUrl(picturePath);
+  }
+
+  /**
+   * Check if user has profile picture
+   */
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
+  }
+
+  /**
+   * Get article/news image URL
+   */
+  getNewsImageUrl(imagePath: string | null | undefined): string {
+    return this.imageService.getImageUrl(imagePath) || this.imageService.getDefaultEventImage();
   }
 }

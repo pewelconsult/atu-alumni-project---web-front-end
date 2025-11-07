@@ -8,6 +8,7 @@ import { User } from '../../models/user';
 import { AlumniEvent, EventComment } from '../../models/event';
 import { EventsService } from '../../services/events.service';
 import { AuthService } from '../../services/auth.service';
+import { ImageService } from '../../services/image.service';
 
 
 @Component({
@@ -62,7 +63,8 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private eventsService: EventsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private imageService: ImageService
   ) {}
 
   ngOnInit(): void {
@@ -628,4 +630,24 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     this.errorMessage = message;
     setTimeout(() => this.errorMessage = '', 3000);
   }
+
+
+    getProfilePictureUrl(picturePath: string | null | undefined): string {
+    return this.imageService.getProfilePictureUrl(picturePath);
+  }
+
+  /**
+   * Check if user has profile picture
+   */
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
+  }
+
+  /**
+   * Get event image URL
+   */
+  getEventImageUrl(imagePath: string | null | undefined): string {
+    return this.imageService.getEventImageUrl(imagePath);
+  }
+
 }

@@ -37,7 +37,7 @@
     <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-8 border border-gray-100">
       <!-- Featured Image -->
       <div class="h-96 overflow-hidden relative">
-        <img [src]="event.event_image || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'"
+        <img [src]="getEventImageUrl(event.event_image)"
              [alt]="event.title"
              class="w-full h-full object-cover">
         
@@ -211,14 +211,19 @@
       <!-- Comment Form -->
       <div *ngIf="currentUser" class="mb-8 p-4 bg-gray-50 rounded-xl">
         <div class="flex items-start space-x-3 mb-4">
-          <div *ngIf="!currentUser.profile_picture" 
-               class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
-            {{ getUserInitials(currentUser.first_name, currentUser.last_name) }}
+          <!-- Updated Current User Avatar - Fixed optional chaining -->
+          <div *ngIf="hasProfilePicture(currentUser.profile_picture); else currentUserInitials" 
+               class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-200">
+            <img [src]="getProfilePictureUrl(currentUser.profile_picture)"
+                 [alt]="currentUser.first_name"
+                 class="w-full h-full object-cover">
           </div>
-          <img *ngIf="currentUser.profile_picture"
-               [src]="currentUser.profile_picture"
-               [alt]="currentUser.first_name"
-               class="w-10 h-10 rounded-full object-cover">
+          <ng-template #currentUserInitials>
+            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+              {{ getUserInitials(currentUser.first_name, currentUser.last_name) }}
+            </div>
+          </ng-template>
+          
           <div class="flex-1">
             <textarea
               [(ngModel)]="newComment"
@@ -257,14 +262,18 @@
         <div *ngFor="let comment of comments" class="border-b border-gray-100 pb-6 last:border-0">
           <!-- Main Comment -->
           <div class="flex items-start space-x-3">
-            <div *ngIf="!comment.profile_picture" 
-                 class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-              {{ getUserInitials(comment.first_name, comment.last_name) }}
+            <!-- Updated Comment Avatar with Image -->
+            <div *ngIf="hasProfilePicture(comment.profile_picture); else mainCommentInitials" 
+                 class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-200">
+              <img [src]="getProfilePictureUrl(comment.profile_picture)"
+                   [alt]="comment.first_name"
+                   class="w-full h-full object-cover">
             </div>
-            <img *ngIf="comment.profile_picture"
-                 [src]="comment.profile_picture"
-                 [alt]="comment.first_name"
-                 class="w-10 h-10 rounded-full object-cover flex-shrink-0">
+            <ng-template #mainCommentInitials>
+              <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                {{ getUserInitials(comment.first_name, comment.last_name) }}
+              </div>
+            </ng-template>
             
             <div class="flex-1 min-w-0">
               <div class="flex items-center justify-between mb-1">
@@ -303,14 +312,19 @@
               <!-- Reply Form -->
               <div *ngIf="replyingTo === comment.id && currentUser" class="mt-4">
                 <div class="flex items-start space-x-3">
-                  <div *ngIf="!currentUser.profile_picture"
-                       class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                    {{ getUserInitials(currentUser.first_name, currentUser.last_name) }}
+                  <!-- Updated Reply Form Avatar (Current User) -->
+                  <div *ngIf="hasProfilePicture(currentUser.profile_picture); else replyFormInitials"
+                       class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+                    <img [src]="getProfilePictureUrl(currentUser.profile_picture)"
+                         [alt]="currentUser.first_name"
+                         class="w-full h-full object-cover">
                   </div>
-                  <img *ngIf="currentUser.profile_picture"
-                       [src]="currentUser.profile_picture"
-                       [alt]="currentUser.first_name"
-                       class="w-8 h-8 rounded-full object-cover flex-shrink-0">
+                  <ng-template #replyFormInitials>
+                    <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                      {{ getUserInitials(currentUser.first_name, currentUser.last_name) }}
+                    </div>
+                  </ng-template>
+                  
                   <div class="flex-1">
                     <textarea
                       [(ngModel)]="replyTexts[comment.id]"
@@ -320,11 +334,11 @@
                     ></textarea>
                     <div class="flex justify-end space-x-2 mt-2">
                       <button (click)="toggleReply(comment.id)"
-                              class="px-3 py-1 text-sm text-gray-600 hover:text-gray-800">
+                              class="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 transition-colors">
                         Cancel
                       </button>
                       <button (click)="replyToComment(comment.id)"
-                              class="px-3 py-1 text-sm bg-primary text-white rounded hover:bg-opacity-90">
+                              class="px-3 py-1 text-sm bg-primary text-white rounded hover:bg-opacity-90 transition-colors">
                         Reply
                       </button>
                     </div>
@@ -335,7 +349,7 @@
               <!-- Show Replies Button -->
               <div *ngIf="comment.reply_count && comment.reply_count > 0 && !commentReplies[comment.id]" class="mt-3">
                 <button (click)="loadCommentReplies(comment.id)"
-                        class="text-sm text-primary hover:text-primary-dark flex items-center">
+                        class="text-sm text-primary hover:text-primary-dark flex items-center transition-colors">
                   <i class="fas fa-chevron-down mr-1"></i>
                   Show {{ comment.reply_count }} {{ comment.reply_count === 1 ? 'reply' : 'replies' }}
                 </button>
@@ -345,14 +359,18 @@
               <div *ngIf="getCommentReplies(comment.id).length > 0" class="mt-4 space-y-4">
                 <div *ngFor="let reply of getCommentReplies(comment.id)" class="ml-4 pl-4 border-l-2 border-gray-200">
                   <div class="flex items-start space-x-3">
-                    <div *ngIf="!reply.profile_picture"
-                         class="w-8 h-8 bg-accent rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                      {{ getUserInitials(reply.first_name, reply.last_name) }}
+                    <!-- Updated Reply Avatar with Image -->
+                    <div *ngIf="hasProfilePicture(reply.profile_picture); else replyInitials"
+                         class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+                      <img [src]="getProfilePictureUrl(reply.profile_picture)"
+                           [alt]="reply.first_name"
+                           class="w-full h-full object-cover">
                     </div>
-                    <img *ngIf="reply.profile_picture"
-                         [src]="reply.profile_picture"
-                         [alt]="reply.first_name"
-                         class="w-8 h-8 rounded-full object-cover flex-shrink-0">
+                    <ng-template #replyInitials>
+                      <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                        {{ getUserInitials(reply.first_name, reply.last_name) }}
+                      </div>
+                    </ng-template>
                     
                     <div class="flex-1 min-w-0">
                       <div class="flex items-center justify-between mb-1">

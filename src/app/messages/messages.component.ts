@@ -1,3 +1,4 @@
+// src/app/components/messages/messages.component.ts
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +8,7 @@ import { User } from '../../models/user';
 import { Conversation, Message } from '../../models/message';
 import { MessagingService } from '../../services/messaging.service';
 import { AuthService } from '../../services/auth.service';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-messages',
@@ -20,7 +22,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private typingTimeout: any;
-  private lastMessageCount = 0; // ✅ Track message count
+  private lastMessageCount = 0;
 
   // User data
   currentUser: User | null = null;
@@ -40,7 +42,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   isLoadingConversations: boolean = false;
   isLoadingMessages: boolean = false;
   isSendingMessage: boolean = false;
-  isInitialLoad: boolean = true; // ✅ Track initial load
+  isInitialLoad: boolean = true;
   
   // Typing indicator
   isOtherUserTyping: boolean = false;
@@ -49,41 +51,35 @@ export class MessagesComponent implements OnInit, OnDestroy {
   constructor(
     private messageService: MessagingService,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private imageService: ImageService,
   ) {}
 
   ngOnInit(): void {
-  // Get current user
-  this.authService.currentUser$.pipe(takeUntil(this.destroy$)).subscribe(user => {
-    this.currentUser = user;
-    if (user) {
-      // First load conversations
-      this.loadConversations();
-    }
-  });
-
-  // ✅ Check URL params AFTER conversations are loaded
-  this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
-    if (params['user'] && this.currentUser) {
-      const otherUserId = parseInt(params['user']);
-      console.log('URL param user detected:', otherUserId);
-      
-      // ✅ Small delay to ensure conversations are loaded first
-      setTimeout(() => {
-        this.createOrOpenConversation(otherUserId);
-      }, 500);
-    }
-  });
-
-  // Only poll if conversation is selected and after initial load
-  timer(10000, 10000)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(() => {
-      if (this.selectedConversation && this.currentUser && !this.isInitialLoad) {
-        this.refreshMessagesQuietly();
+    this.authService.currentUser$.pipe(takeUntil(this.destroy$)).subscribe(user => {
+      this.currentUser = user;
+      if (user) {
+        this.loadConversations();
       }
     });
-}
+
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      if (params['user'] && this.currentUser) {
+        const otherUserId = parseInt(params['user']);
+        setTimeout(() => {
+          this.createOrOpenConversation(otherUserId);
+        }, 500);
+      }
+    });
+
+    timer(10000, 10000)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        if (this.selectedConversation && this.currentUser && !this.isInitialLoad) {
+          this.refreshMessagesQuietly();
+        }
+      });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -93,83 +89,53 @@ export class MessagesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * ✅ Create or open conversation with a specific user
-   */
-  /**
- * ✅ Create or open conversation with a specific user
- */
-  /**
- * ✅ Create or open conversation with a specific user
- */
-createOrOpenConversation(otherUserId: number): void {
-  if (!this.currentUser) return;
+  createOrOpenConversation(otherUserId: number): void {
+    if (!this.currentUser) return;
 
-  console.log('Creating/opening conversation with user:', otherUserId);
-
-  // Check if conversation already exists
-  const existingConv = this.conversations.find(c => c.other_user_id === otherUserId);
-  
-  if (existingConv) {
-    console.log('Found existing conversation:', existingConv);
-    this.selectConversation(existingConv);
-  } else {
-    // Create new conversation
-    this.messageService.getOrCreateConversationWithUser(this.currentUser.id, otherUserId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          console.log('Create conversation response:', response);
-          
-          if (response.success && response.data) {
-            const rawConv = response.data;
-            
-            // ✅ Determine which user is "other" and map properties correctly
-            const isUser1 = rawConv.user1_id === this.currentUser?.id;
-            const otherUserId = isUser1 ? rawConv.user2_id : rawConv.user1_id;
-            const otherUserName = isUser1 ? rawConv.user2_name : rawConv.user1_name;
-            const otherUserPicture = isUser1 ? rawConv.user2_picture : rawConv.user1_picture;
-            
-            // ✅ Transform backend response to match our Conversation interface
-            const conversation: Conversation = {
-              conversation_id: rawConv.id, // ✅ Backend returns 'id', not 'conversation_id'
-              other_user_id: otherUserId,
-              other_user_name: otherUserName || 'User',
-              other_user_picture: otherUserPicture,
-              unread_count: 0,
-              is_archived: rawConv.is_archived_by_user1 || rawConv.is_archived_by_user2 || false,
-              is_blocked: rawConv.is_blocked_by_user1 || rawConv.is_blocked_by_user2 || false,
-              last_message_at: rawConv.last_message_at || rawConv.created_at || new Date().toISOString(),
-              last_message_preview: rawConv.last_message_preview || '',
-              conversation_created_at: rawConv.created_at || new Date().toISOString()
-            };
-            
-            console.log('Transformed conversation:', conversation);
-            
-            // Add to conversations list if not already there
-            if (!this.conversations.find(c => c.conversation_id === conversation.conversation_id)) {
-              this.conversations.unshift(conversation);
+    const existingConv = this.conversations.find(c => c.other_user_id === otherUserId);
+    
+    if (existingConv) {
+      this.selectConversation(existingConv);
+    } else {
+      this.messageService.getOrCreateConversationWithUser(this.currentUser.id, otherUserId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response.success && response.data) {
+              const rawConv = response.data;
+              const isUser1 = rawConv.user1_id === this.currentUser?.id;
+              const otherUserId = isUser1 ? rawConv.user2_id : rawConv.user1_id;
+              const otherUserName = isUser1 ? rawConv.user2_name : rawConv.user1_name;
+              const otherUserPicture = isUser1 ? rawConv.user2_picture : rawConv.user1_picture;
+              
+              const conversation: Conversation = {
+                conversation_id: rawConv.id,
+                other_user_id: otherUserId,
+                other_user_name: otherUserName || 'User',
+                other_user_picture: otherUserPicture,
+                unread_count: 0,
+                is_archived: rawConv.is_archived_by_user1 || rawConv.is_archived_by_user2 || false,
+                is_blocked: rawConv.is_blocked_by_user1 || rawConv.is_blocked_by_user2 || false,
+                last_message_at: rawConv.last_message_at || rawConv.created_at || new Date().toISOString(),
+                last_message_preview: rawConv.last_message_preview || '',
+                conversation_created_at: rawConv.created_at || new Date().toISOString()
+              };
+              
+              if (!this.conversations.find(c => c.conversation_id === conversation.conversation_id)) {
+                this.conversations.unshift(conversation);
+              }
+              
+              this.selectConversation(conversation);
             }
-            
-            // ✅ Select the conversation immediately
-            this.selectConversation(conversation);
-          } else {
-            console.error('Invalid response structure:', response);
-            alert('Failed to start conversation. Invalid response.');
+          },
+          error: (error) => {
+            console.error('Error creating conversation:', error);
+            alert('Failed to start conversation. Please try again.');
           }
-        },
-        error: (error) => {
-          console.error('Error creating conversation:', error);
-          alert('Failed to start conversation. Please try again.');
-        }
-      });
+        });
+    }
   }
-}
 
-
-  /**
-   * Load all conversations
-   */
   loadConversations(): void {
     if (!this.currentUser) return;
 
@@ -190,19 +156,13 @@ createOrOpenConversation(otherUserId: number): void {
       });
   }
 
-  /**
-   * Select a conversation
-   */
   selectConversation(conversation: Conversation): void {
-    this.isInitialLoad = true; // ✅ Set initial load flag
+    this.isInitialLoad = true;
     this.selectedConversation = conversation;
     this.loadMessages(conversation.conversation_id);
     this.markAsRead(conversation.conversation_id);
   }
 
-  /**
-   * Load messages for selected conversation
-   */
   loadMessages(conversationId: number): void {
     if (!this.currentUser) return;
 
@@ -213,10 +173,10 @@ createOrOpenConversation(otherUserId: number): void {
         next: (response) => {
           if (response.success && response.data) {
             this.messages = response.data;
-            this.lastMessageCount = this.messages.length; // ✅ Store count
+            this.lastMessageCount = this.messages.length;
             setTimeout(() => {
               this.scrollToBottom();
-              this.isInitialLoad = false; // ✅ Initial load complete
+              this.isInitialLoad = false;
             }, 100);
           }
           this.isLoadingMessages = false;
@@ -229,9 +189,6 @@ createOrOpenConversation(otherUserId: number): void {
       });
   }
 
-  /**
-   * ✅ Refresh messages quietly (no loading indicator, no scroll unless new messages)
-   */
   refreshMessagesQuietly(): void {
     if (!this.currentUser || !this.selectedConversation) return;
 
@@ -243,8 +200,6 @@ createOrOpenConversation(otherUserId: number): void {
       next: (response) => {
         if (response.success && response.data) {
           const newMessages = response.data;
-          
-          // ✅ Only update if there are new messages
           if (newMessages.length > this.lastMessageCount) {
             this.messages = newMessages;
             this.lastMessageCount = newMessages.length;
@@ -256,9 +211,6 @@ createOrOpenConversation(otherUserId: number): void {
     });
   }
 
-  /**
-   * Send a message
-   */
   sendMessage(): void {
     if (!this.currentUser || !this.selectedConversation || !this.newMessage.trim()) {
       return;
@@ -278,11 +230,9 @@ createOrOpenConversation(otherUserId: number): void {
         next: (response) => {
           if (response.success && response.data) {
             this.messages.push(response.data);
-            this.lastMessageCount = this.messages.length; // ✅ Update count
+            this.lastMessageCount = this.messages.length;
             this.newMessage = '';
             setTimeout(() => this.scrollToBottom(), 100);
-            
-            // ✅ Quietly update conversation list
             this.loadConversationsQuietly();
           }
           this.isSendingMessage = false;
@@ -295,9 +245,6 @@ createOrOpenConversation(otherUserId: number): void {
       });
   }
 
-  /**
-   * ✅ Load conversations quietly (no loading indicator)
-   */
   loadConversationsQuietly(): void {
     if (!this.currentUser) return;
 
@@ -313,9 +260,6 @@ createOrOpenConversation(otherUserId: number): void {
       });
   }
 
-  /**
-   * Mark messages as read
-   */
   markAsRead(conversationId: number): void {
     if (!this.currentUser) return;
 
@@ -323,7 +267,6 @@ createOrOpenConversation(otherUserId: number): void {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          // Update unread count in conversation list
           const conv = this.conversations.find(c => c.conversation_id === conversationId);
           if (conv) {
             conv.unread_count = 0;
@@ -333,32 +276,23 @@ createOrOpenConversation(otherUserId: number): void {
       });
   }
 
-  /**
-   * Handle typing
-   */
   onTyping(): void {
     if (!this.currentUser || !this.selectedConversation) return;
 
-    // Clear existing timeout
     if (this.typingTimeout) {
       clearTimeout(this.typingTimeout);
     }
 
-    // Send typing indicator
     this.messageService.setTypingIndicator(
       this.selectedConversation.conversation_id,
       this.currentUser.id
     ).subscribe();
 
-    // Set timeout to stop sending after 3 seconds
     this.typingTimeout = setTimeout(() => {
       // Typing stopped
     }, 3000);
   }
 
-  /**
-   * Check if other user is typing
-   */
   checkTypingStatus(): void {
     if (!this.currentUser || !this.selectedConversation) return;
 
@@ -377,9 +311,6 @@ createOrOpenConversation(otherUserId: number): void {
     });
   }
 
-  /**
-   * Scroll to bottom of messages
-   */
   scrollToBottom(): void {
     try {
       if (this.messagesContainer) {
@@ -391,9 +322,6 @@ createOrOpenConversation(otherUserId: number): void {
     }
   }
 
-  /**
-   * Get filtered conversations
-   */
   getFilteredConversations(): Conversation[] {
     if (!this.searchQuery.trim()) {
       return this.conversations;
@@ -403,9 +331,6 @@ createOrOpenConversation(otherUserId: number): void {
     );
   }
 
-  /**
-   * Format time
-   */
   formatTime(dateString: string): string {
     if (!dateString) return '';
     
@@ -426,17 +351,11 @@ createOrOpenConversation(otherUserId: number): void {
     return date.toLocaleDateString();
   }
 
-  /**
-   * Format message time
-   */
   formatMessageTime(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
   }
 
-  /**
-   * Get user initials
-   */
   getUserInitials(name: string): string {
     if (!name) return 'U';
     const parts = name.trim().split(' ');
@@ -446,12 +365,19 @@ createOrOpenConversation(otherUserId: number): void {
     return name.substring(0, 2).toUpperCase();
   }
 
-  /**
-   * Is message from current user
-   */
   isMyMessage(message: Message): boolean {
     return message.sender_id === this.currentUser?.id;
   }
+
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    return this.imageService.getProfilePictureUrl(picturePath);
+  }
+
+  /**
+   * Check if user has profile picture
+   */
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
+  }
+
 }
-
-

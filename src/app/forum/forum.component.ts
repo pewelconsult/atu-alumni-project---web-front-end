@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ForumService } from '../../services/forum.service';
-import { AuthService } from '../../services/auth.service'; // ✅ Import AuthService
+import { AuthService } from '../../services/auth.service';
+import { ImageService } from '../../services/image.service'; // ✅ Add this
 import { ForumCategory, ForumPost } from '../../models/forum';
-
 
 @Component({
   selector: 'app-forum',
@@ -45,12 +45,12 @@ export class ForumComponent implements OnInit, OnDestroy {
 
   constructor(
     private forumService: ForumService,
-    private authService: AuthService, // ✅ Inject AuthService
+    private authService: AuthService,
+    private imageService: ImageService, // ✅ Inject ImageService
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    // ✅ Get current user ID from auth service
     this.authService.currentUser$.pipe(takeUntil(this.destroy$)).subscribe(user => {
       this.currentUserId = user?.id || null;
     });
@@ -159,17 +159,14 @@ export class ForumComponent implements OnInit, OnDestroy {
    * Navigate to post detail page
    */
   viewPost(post: ForumPost): void {
-    // Increment view count
-  this.forumService.incrementPostViews(post.id).subscribe();
-  // Navigate to post detail
-  this.router.navigate(['/forum/posts', post.id]);
+    this.forumService.incrementPostViews(post.id).subscribe();
+    this.router.navigate(['/forum/posts', post.id]);
   }
 
   /**
    * Navigate to create new post page
    */
   createNewPost(): void {
-    // ✅ Check if user is logged in
     if (!this.currentUserId) {
       alert('Please login to create a post');
       this.router.navigate(['/login']);
@@ -185,7 +182,6 @@ export class ForumComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     
     if (!this.currentUserId) {
-      // Redirect to login or show message
       alert('Please login to like posts');
       this.router.navigate(['/login']);
       return;
@@ -281,7 +277,7 @@ export class ForumComponent implements OnInit, OnDestroy {
         for (let i = 1; i <= 4; i++) {
           pages.push(i);
         }
-        pages.push(-1); // Ellipsis
+        pages.push(-1);
         pages.push(this.totalPages);
       } else if (this.currentPage >= this.totalPages - 2) {
         pages.push(1);
@@ -302,4 +298,25 @@ export class ForumComponent implements OnInit, OnDestroy {
     
     return pages;
   }
+
+  // ✅ Add image helper methods
+
+  /**
+   * Get profile picture URL
+   */
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    return this.imageService.getProfilePictureUrl(picturePath);
+  }
+
+  /**
+   * Check if user has profile picture
+   */
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
+  }
+
+
+  navigateToCreateForum() {
+ this.router.navigate(["/createForum"])
+}
 }

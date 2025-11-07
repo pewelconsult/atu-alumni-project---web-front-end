@@ -17,6 +17,7 @@ import { ForumService } from '../../../services/forum.service';
   styleUrls: ['./forum-management.component.scss']
 })
 export class ForumManagementComponent implements OnInit, OnDestroy {
+
   private destroy$ = new Subject<void>();
 
   // Data
@@ -730,4 +731,7 @@ export class ForumManagementComponent implements OnInit, OnDestroy {
     this.errorMessage = message;
     setTimeout(() => this.errorMessage = '', 3000);
   }
+
+    
+
 }

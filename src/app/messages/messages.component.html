@@ -1,3 +1,4 @@
+<!-- messages.component.html -->
 <div class="container mx-auto px-4 py-8">
   <!-- Header -->
   <div class="bg-gradient-to-r from-primary to-accent text-white rounded-2xl shadow-lg p-6 mb-8 slide-in relative overflow-hidden">
@@ -47,14 +48,16 @@
           [class.bg-blue-50]="selectedConversation?.conversation_id === conversation.conversation_id">
           
           <div class="relative flex-shrink-0">
-            <!-- User Avatar -->
-            <div 
-              *ngIf="conversation.other_user_picture; else conversationInitials"
-              class="w-12 h-12 rounded-full overflow-hidden">
-              <img [src]="conversation.other_user_picture" [alt]="conversation.other_user_name" class="w-full h-full object-cover">
+            <!-- User Avatar with Image -->
+            <div *ngIf="hasProfilePicture(conversation.other_user_picture); else conversationInitials"
+                 class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200">
+              <img [src]="getProfilePictureUrl(conversation.other_user_picture)" 
+                   [alt]="conversation.other_user_name" 
+                   class="w-full h-full object-cover"
+                   onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex'">
             </div>
             <ng-template #conversationInitials>
-              <div class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">
+              <div class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-bold border-2 border-gray-200">
                 {{ getUserInitials(conversation.other_user_name) }}
               </div>
             </ng-template>
@@ -105,13 +108,16 @@
         <div class="p-4 border-b border-gray-100 flex items-center justify-between">
           <div class="flex items-center">
             <div class="relative flex-shrink-0">
-              <div 
-                *ngIf="selectedConversation.other_user_picture; else headerInitials"
-                class="w-12 h-12 rounded-full overflow-hidden">
-                <img [src]="selectedConversation.other_user_picture" [alt]="selectedConversation.other_user_name" class="w-full h-full object-cover">
+              <!-- Header Avatar with Image -->
+              <div *ngIf="hasProfilePicture(selectedConversation.other_user_picture); else headerInitials"
+                   class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200">
+                <img [src]="getProfilePictureUrl(selectedConversation.other_user_picture)" 
+                     [alt]="selectedConversation.other_user_name" 
+                     class="w-full h-full object-cover"
+                     onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex'">
               </div>
               <ng-template #headerInitials>
-                <div class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">
+                <div class="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-bold border-2 border-gray-200">
                   {{ getUserInitials(selectedConversation.other_user_name) }}
                 </div>
               </ng-template>
@@ -164,13 +170,16 @@
               <div 
                 *ngIf="!isMyMessage(message)"
                 class="flex items-start space-x-3 mb-4">
-                <div 
-                  *ngIf="selectedConversation.other_user_picture; else messageInitials"
-                  class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                  <img [src]="selectedConversation.other_user_picture" [alt]="selectedConversation.other_user_name" class="w-full h-full object-cover">
+                <!-- Message Avatar with Image -->
+                <div *ngIf="hasProfilePicture(selectedConversation.other_user_picture); else messageInitials"
+                     class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+                  <img [src]="getProfilePictureUrl(selectedConversation.other_user_picture)" 
+                       [alt]="selectedConversation.other_user_name" 
+                       class="w-full h-full object-cover"
+                       onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex'">
                 </div>
                 <ng-template #messageInitials>
-                  <div class="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                  <div class="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 border border-gray-200">
                     {{ getUserInitials(selectedConversation.other_user_name) }}
                   </div>
                 </ng-template>
@@ -220,13 +229,16 @@
                   </div>
                 </div>
                 
-                <div 
-                  *ngIf="currentUser?.profile_picture; else myMessageInitials"
-                  class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                  <img [src]="currentUser!.profile_picture" [alt]="currentUser!.first_name" class="w-full h-full object-cover">
+                <!-- Current User Avatar with Image -->
+                <div *ngIf="hasProfilePicture(currentUser?.profile_picture); else myMessageInitials"
+                     class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+                  <img [src]="getProfilePictureUrl(currentUser?.profile_picture)" 
+                       [alt]="currentUser!.first_name" 
+                       class="w-full h-full object-cover"
+                       onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex'">
                 </div>
                 <ng-template #myMessageInitials>
-                  <div class="w-8 h-8 bg-gradient-to-r from-secondary to-primary rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                  <div class="w-8 h-8 bg-gradient-to-r from-secondary to-primary rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 border border-gray-200">
                     {{ getUserInitials((currentUser?.first_name || '') + ' ' + (currentUser?.last_name || '')) }}
                   </div>
                 </ng-template>
@@ -235,9 +247,20 @@
 
             <!-- Typing Indicator -->
             <div *ngIf="isOtherUserTyping" class="flex items-start space-x-3 mb-4">
-              <div class="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                {{ getUserInitials(selectedConversation.other_user_name) }}
+              <!-- Typing Avatar with Image -->
+              <div *ngIf="hasProfilePicture(selectedConversation.other_user_picture); else typingInitials"
+                   class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+                <img [src]="getProfilePictureUrl(selectedConversation.other_user_picture)" 
+                     [alt]="selectedConversation.other_user_name" 
+                     class="w-full h-full object-cover"
+                     onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex'">
               </div>
+              <ng-template #typingInitials>
+                <div class="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 border border-gray-200">
+                  {{ getUserInitials(selectedConversation.other_user_name) }}
+                </div>
+              </ng-template>
+              
               <div class="max-w-[70%] min-w-0">
                 <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-sm border border-gray-100">
                   <div class="flex space-x-1">

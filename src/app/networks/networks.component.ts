@@ -9,6 +9,7 @@ import { ConnectionService } from '../../services/connection.service';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { ApiResponse } from '../../models/api-response';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-networks',
@@ -53,7 +54,8 @@ export class NetworksComponent implements OnInit {
     private connectionService: ConnectionService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private imageService: ImageService,
   ) {}
 
   ngOnInit(): void {
@@ -299,33 +301,13 @@ export class NetworksComponent implements OnInit {
    * Get profile picture URL
    */
   getProfilePictureUrl(picturePath: string | null | undefined): string {
-    if (!picturePath) {
-      return '';
-    }
-    
-    if (picturePath.startsWith('http://') || picturePath.startsWith('https://')) {
-      return picturePath;
-    }
-    
-    const backendUrl = 'http://localhost:8080';
-    
-    if (picturePath.startsWith('/api')) {
-      return `${backendUrl}${picturePath}`;
-    }
-    
-    if (picturePath.startsWith('/uploads')) {
-      return `${backendUrl}/api${picturePath}`;
-    }
-    
-    return `${backendUrl}/api${picturePath}`;
+    return this.imageService.getProfilePictureUrl(picturePath);
   }
 
-  /**
-   * Check if user has profile picture
-   */
   hasProfilePicture(picturePath: string | null | undefined): boolean {
-    return !!(picturePath);
+    return this.imageService.hasImage(picturePath);
   }
+  
  
   /**
    * View all suggestions

@@ -7,6 +7,7 @@ import { AlumniEvent, EventComment } from '../../models/event';
 import { EventsService } from '../../services/events.service';
 import { AuthService } from '../../services/auth.service';
 import { ApiResponse } from '../../models/api-response';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-events',
@@ -46,7 +47,8 @@ export class EventsComponent implements OnInit {
   constructor(
     private eventsService: EventsService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private imageService: ImageService
   ) {}
 
   ngOnInit(): void {
@@ -309,4 +311,20 @@ export class EventsComponent implements OnInit {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
+
+
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    return this.imageService.getProfilePictureUrl(picturePath);
+  }
+
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
+  }
+
+  getEventImageUrl(imagePath: string | null | undefined): string {
+    return this.imageService.getEventImageUrl(imagePath);
+  }
+
+
+
 }

@@ -28,6 +28,7 @@ import { SuggestedNetworksComponent } from './suggested-networks/suggested-netwo
 import { SettingsComponent } from './admin/settings/settings.component';
 import { ReportsComponent } from './admin/reports/reports.component';
 import { AdminTracerComponent } from './admin/admin-tracer/admin-tracer.component';
+import { CreateForumComponent } from './create-forum/create-forum.component';
 
 export const routes: Routes = [
   // Root redirect
@@ -67,6 +68,7 @@ export const routes: Routes = [
   { path: 'adminForum', component: ForumManagementComponent },
   { path: 'adminTracer', component: AdminTracerComponent },
   { path: 'adminNews', component: NewsManagementComponent },
+  { path: 'createForum', component: CreateForumComponent },
   { path: 'newsForm', component: NewsFormComponent },
   { path: 'reports', component: ReportsComponent },
   { path: 'settings', component: SettingsComponent },

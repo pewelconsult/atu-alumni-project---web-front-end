@@ -1,3 +1,4 @@
+// src/app/components/forum-topic-detail/forum-topic-detail.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -5,9 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ForumService } from '../../services/forum.service';
 import { AuthService } from '../../services/auth.service';
+import { ImageService } from '../../services/image.service'; // ✅ Add this
 import { ForumPost, ForumReply } from '../../models/forum';
 import { User } from '../../models/user';
-import { ApiResponse } from '../../models/api-response'; // ✅ Add this import
+import { ApiResponse } from '../../models/api-response';
 
 @Component({
   selector: 'app-forum-topic-detail',
@@ -41,7 +43,8 @@ export class ForumTopicDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private forumService: ForumService,
-    private authService: AuthService
+    private authService: AuthService,
+    private imageService: ImageService // ✅ Inject ImageService
   ) {}
 
   ngOnInit(): void {
@@ -155,7 +158,6 @@ export class ForumTopicDetailComponent implements OnInit, OnDestroy {
     }
 
     if (this.post.user_has_liked) {
-      // ✅ Pass userId parameter
       this.forumService.unlikePost(this.post.id, this.currentUser.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -168,7 +170,6 @@ export class ForumTopicDetailComponent implements OnInit, OnDestroy {
           error: (error) => console.error('Error unliking post:', error)
         });
     } else {
-      // ✅ Pass userId parameter
       this.forumService.likePost(this.post.id, this.currentUser.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -194,7 +195,6 @@ export class ForumTopicDetailComponent implements OnInit, OnDestroy {
     }
 
     if (reply.user_has_liked) {
-      // ✅ Pass userId parameter
       this.forumService.unlikeReply(this.post.id, reply.id, this.currentUser.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -207,7 +207,6 @@ export class ForumTopicDetailComponent implements OnInit, OnDestroy {
           error: (error) => console.error('Error unliking reply:', error)
         });
     } else {
-      // ✅ Pass userId parameter
       this.forumService.likeReply(this.post.id, reply.id, this.currentUser.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -248,7 +247,7 @@ export class ForumTopicDetailComponent implements OnInit, OnDestroy {
     this.forumService.createReply(replyData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: ApiResponse<ForumReply>) => { // ✅ Fixed type
+        next: (response: ApiResponse<ForumReply>) => {
           if (response.success) {
             // Clear form
             this.replyContent = '';
@@ -351,5 +350,20 @@ export class ForumTopicDetailComponent implements OnInit, OnDestroy {
       'from-orange-600 to-yellow-600'
     ];
     return colors[index % colors.length];
+  }
+
+
+  /**
+   * Get profile picture URL
+   */
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    return this.imageService.getProfilePictureUrl(picturePath);
+  }
+
+  /**
+   * Check if user has profile picture
+   */
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
   }
 }

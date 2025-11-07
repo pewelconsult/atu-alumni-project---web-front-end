@@ -1,3 +1,4 @@
+<!-- events.component.html -->
 <div class="container mx-auto px-4 py-6">
   <!-- Header -->
   <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl shadow-lg p-5 mb-6 slide-in relative overflow-hidden">
@@ -81,7 +82,7 @@
         (click)="viewEvent(event.id)"
       >
         <img 
-          [src]="event.event_image || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400'" 
+          [src]="getEventImageUrl(event.event_image)" 
           [alt]="event.title" 
           class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         >
@@ -159,9 +160,19 @@
               *ngFor="let comment of getVisibleComments(event.id)"
               class="flex items-start space-x-2"
             >
-              <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs flex-shrink-0">
-                {{ getUserInitials(comment.first_name, comment.last_name) }}
+              <!-- Updated Avatar with Image -->
+              <div *ngIf="hasProfilePicture(comment.profile_picture); else commentInitials"
+                   class="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+                <img [src]="getProfilePictureUrl(comment.profile_picture)" 
+                     [alt]="comment.first_name" 
+                     class="w-full h-full object-cover">
               </div>
+              <ng-template #commentInitials>
+                <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs flex-shrink-0">
+                  {{ getUserInitials(comment.first_name, comment.last_name) }}
+                </div>
+              </ng-template>
+              
               <div class="flex-1 min-w-0">
                 <p class="font-medium text-xs truncate">{{ comment.first_name }} {{ comment.last_name }}</p>
                 <p class="text-gray-600 text-xs break-words">{{ comment.comment }}</p>

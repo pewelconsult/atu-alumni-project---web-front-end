@@ -1,4 +1,5 @@
 export interface AlumniEvent {
+  user_rsvp_status: import("c:/Users/user/Desktop/ATU Contract Project/NEW VERSION/front end/atu-alumni-project/src/models/user").User | null;
   id: number;
   created_by: number;
   created_by_name?: string;
