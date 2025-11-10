@@ -10,6 +10,7 @@ import { NotificationService } from '../../services/notifications.service';
 import { MessagingService } from '../../services/messaging.service';
 import { User } from '../../models/user';
 import { environment } from '../../environments/environment';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-header',
@@ -30,7 +31,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private notificationService: NotificationService,
     private messagingService: MessagingService,
-    private router: Router
+    private router: Router,
+    private imageService: ImageService
   ) {}
 
   ngOnInit(): void {
@@ -143,43 +145,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || 'U';
   }
 
-  /**
-   * Get full profile picture URL
-   */
-  getProfilePictureUrl(): string {
-    const picturePath = this.currentUser?.profile_picture;
-    
-    // If no picture, return default
-    if (!picturePath) {
-      return 'assets/images/default-avatar.png';
-    }
-    
-    // If it's already a full URL (starts with http/https), return as-is
-    if (picturePath.startsWith('http://') || picturePath.startsWith('https://')) {
-      return picturePath;
-    }
-    
-    // For development, construct the full URL
-    const backendUrl = 'http://localhost:8080';
-    
-    // If path starts with /api, use it directly
-    if (picturePath.startsWith('/api')) {
-      return `${backendUrl}${picturePath}`;
-    }
-    
-    // If path starts with /uploads, add /api prefix
-    if (picturePath.startsWith('/uploads')) {
-      return `${backendUrl}/api${picturePath}`;
-    }
-    
-    // Otherwise, add /api prefix
-    return `${backendUrl}/api${picturePath}`;
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    return this.imageService.getProfilePictureUrl(picturePath);
   }
 
   /**
    * Check if user has profile picture
    */
-  hasProfilePicture(): boolean {
-    return !!(this.currentUser?.profile_picture);
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
   }
+
+   
 }

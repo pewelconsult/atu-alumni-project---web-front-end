@@ -779,4 +779,15 @@ export class AdminTracerComponent implements OnInit, OnDestroy {
     // TODO: Implement toast notification
     alert(message);
   }
+
+  // Add this method to your component
+get employmentRate(): number {
+  if (!this.analytics?.overview) return 0;
+  
+  const overview = this.analytics.overview;
+  const totalEmployed = (overview.employed_count || 0) + (overview.self_employed_count || 0);
+  const total = overview.total_responses || 0;
+  
+  return total > 0 ? (totalEmployed / total) * 100 : 0;
+}
 }

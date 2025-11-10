@@ -372,7 +372,7 @@
           </button>
           <button 
             type="button" 
-            (click)="showSection(3)" 
+            (click)="showSection(getNextSection(2))" 
             class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition-colors duration-300 font-medium flex items-center">
             Next Section
             <i class="fas fa-arrow-right ml-2"></i>
@@ -380,7 +380,6 @@
         </div>
       </div>
 
-      <!-- Continue in next message due to length... -->
       <!-- SECTION 3: Employment / Self-Employment -->
       <div id="section3" class="form-section bg-white rounded-xl shadow-md p-6 card-hover slide-in" 
            [style.display]="currentSection === 3 ? 'block' : 'none'">
@@ -678,14 +677,14 @@
         <div class="flex justify-between mt-8 pt-6 border-t border-gray-200">
           <button 
             type="button" 
-            (click)="showSection(2)" 
+            (click)="showSection(getPreviousSection(3))" 
             class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-300 font-medium flex items-center">
             <i class="fas fa-arrow-left mr-2"></i>
             Previous
           </button>
           <button 
             type="button" 
-            (click)="showSection(4)" 
+            (click)="showSection(getNextSection(3))" 
             class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition-colors duration-300 font-medium flex items-center">
             Next Section
             <i class="fas fa-arrow-right ml-2"></i>
@@ -766,14 +765,14 @@
         <div class="flex justify-between mt-8 pt-6 border-t border-gray-200">
           <button 
             type="button" 
-            (click)="showSection(3)" 
+            (click)="showSection(getPreviousSection(4))" 
             class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-300 font-medium flex items-center">
             <i class="fas fa-arrow-left mr-2"></i>
             Previous
           </button>
           <button 
             type="button" 
-            (click)="showSection(5)" 
+            (click)="showSection(getNextSection(4))" 
             class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition-colors duration-300 font-medium flex items-center">
             Next Section
             <i class="fas fa-arrow-right ml-2"></i>
@@ -781,8 +780,7 @@
         </div>
       </div>
 
-      <!-- Continue with Sections 5 and 6... -->
-       <!-- SECTION 5: Feedback on ATU Experience -->
+      <!-- SECTION 5: Feedback on ATU Experience -->
       <div id="section5" class="form-section bg-white rounded-xl shadow-md p-6 card-hover slide-in" 
            [style.display]="currentSection === 5 ? 'block' : 'none'">
         <div class="flex items-center space-x-3 mb-6">
@@ -933,7 +931,7 @@
         <div class="flex justify-between mt-8 pt-6 border-t border-gray-200">
           <button 
             type="button" 
-            (click)="showSection(4)" 
+            (click)="showSection(getPreviousSection(5))" 
             class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-300 font-medium flex items-center">
             <i class="fas fa-arrow-left mr-2"></i>
             Previous

@@ -301,98 +301,72 @@ export class NewsFormComponent implements OnInit, OnDestroy {
    * Submit the form
    */
   async submitForm(isPublished: boolean): Promise<void> {
-    if (this.isSubmitting) return;
+  if (this.isSubmitting) return;
 
-    this.isSubmitting = true;
-    this.errorMessage = '';
-    this.successMessage = '';
+  this.isSubmitting = true;
+  this.errorMessage = '';
+  this.successMessage = '';
 
-    try {
-      const formValue = this.articleForm.value;
-      
-      // Parse tags
-      const tags = this.parseTags(formValue.tags);
+  try {
+    const formValue = this.articleForm.value;
+    const tags = this.parseTags(formValue.tags);
+    const slug = this.generateSlug(formValue.title);
 
-      // Generate slug from title
-      const slug = this.generateSlug(formValue.title);
+    const articleData: any = {
+      author_id: this.currentUser!.id,
+      title: formValue.title,
+      slug: slug,
+      excerpt: formValue.excerpt,
+      content: formValue.content,
+      category: formValue.category,
+      tags: tags,
+      meta_description: formValue.meta_description || null,
+      keywords: formValue.keywords || null,
+      is_featured: formValue.is_featured || false,
+      is_published: isPublished
+    };
 
-      // Prepare article data
-      const articleData: any = {
-        author_id: this.currentUser!.id,
-        title: formValue.title,
-        slug: slug,
-        excerpt: formValue.excerpt,
-        content: formValue.content,
-        category: formValue.category,
-        tags: tags,
-        meta_description: formValue.meta_description || null,
-        keywords: formValue.keywords || null,
-        is_featured: formValue.is_featured || false,
-        is_published: isPublished
-      };
-
-      // Handle image upload if there's a new file
-      if (this.selectedFile) {
-        this.isUploadingImage = true;
-        // TODO: Implement actual file upload to server
-        // For now, we'll send base64 (not recommended for production)
-        articleData.featured_image = this.imagePreview;
-        this.isUploadingImage = false;
-      } else if (this.imagePreview && this.isEditMode) {
-        // Keep existing image when editing
-        articleData.featured_image = this.imagePreview;
-      }
-
-      if (this.isEditMode && this.articleId) {
-        // Update existing article
-        this.newsService.updateArticle(this.articleId, articleData).subscribe({
-          next: (response) => {
-            if (response.success) {
-              this.showSuccess('Article updated successfully!');
-              this.articleForm.markAsPristine();
-              setTimeout(() => {
-                this.router.navigate(['/admin/news']);
-              }, 1500);
-            }
-          },
-          error: (error) => {
-            console.error('Error updating article:', error);
-            this.handleError(error);
-          },
-          complete: () => {
-            this.isSubmitting = false;
-          }
-        });
-      } else {
-        // Create new article
-        this.newsService.createArticle(articleData).subscribe({
-          next: (response) => {
-            if (response.success && response.data) {
-              const message = isPublished 
-                ? 'Article published successfully!' 
-                : 'Article saved as draft!';
-              this.showSuccess(message);
-              this.articleForm.markAsPristine();
-              setTimeout(() => {
-                this.router.navigate(['/admin/news']);
-              }, 1500);
-            }
-          },
-          error: (error) => {
-            console.error('Error creating article:', error);
-            this.handleError(error);
-          },
-          complete: () => {
-            this.isSubmitting = false;
-          }
-        });
-      }
-    } catch (error) {
-      console.error('Error preparing article data:', error);
-      this.showError('An error occurred while preparing the article');
-      this.isSubmitting = false;
+    // Handle image
+    if (this.selectedFile) {
+      this.isUploadingImage = true;
+      articleData.featured_image = this.imagePreview;
+      this.isUploadingImage = false;
+    } else if (this.imagePreview && this.isEditMode) {
+      articleData.featured_image = this.imagePreview;
     }
+
+    const request$ = this.isEditMode && this.articleId
+      ? this.newsService.updateArticle(this.articleId, articleData)
+      : this.newsService.createArticle(articleData);
+
+    request$.subscribe({
+      next: (response) => {
+        if (response.success && (response.data || this.isEditMode)) {
+          const message = isPublished
+            ? 'Article published successfully!'
+            : 'Article saved as draft!';
+          this.showSuccess(message);
+          this.articleForm.markAsPristine();
+          setTimeout(() => this.router.navigate(['/admin/news']), 1500);
+        } else {
+          this.showError(response.message || 'Operation failed');
+        }
+      },
+      error: (error) => {
+        console.error('Submission error:', error);
+        this.handleError(error);
+      }
+    });
+
+  } catch (error: any) {
+    console.error('Unexpected error:', error);
+    this.showError('An unexpected error occurred. Please try again.');
+  } finally {
+    // ← THIS IS THE KEY: ALWAYS RUNS!
+    this.isSubmitting = false;
+    this.isUploadingImage = false;
   }
+}
 
   /**
    * Handle API errors

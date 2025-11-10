@@ -23,16 +23,17 @@ export class TracerPageComponent implements OnInit {
   isSubmitting = false;
 
   // Form data
-  formData: TracerStudyResponse = {
-    user_id: 0,
-    full_name: '',
-    index_number: '',
-    programme_of_study: '',
-    year_of_graduation: '',
-    email: '',
-    phone_number: '',
-    current_status: ''
-  };
+  // Form data
+formData: any = {
+  user_id: 0,
+  full_name: '',
+  index_number: '', 
+  programme_of_study: '',
+  year_of_graduation: '',
+  email: '',
+  phone_number: '',
+  current_status: ''
+};
 
   // Dropdown options
   programmes = [
@@ -231,6 +232,9 @@ export class TracerPageComponent implements OnInit {
   /**
  * Submit form
  */
+ /**
+ * Submit form
+ */
 onSubmit(): void {
   if (!this.currentUser) {
     this.showAlert('error', 'Please log in to submit the form.');
@@ -245,10 +249,15 @@ onSubmit(): void {
 
   this.isSubmitting = true;
 
-  // Set completion flag
-  this.formData.is_completed = true;
+  // Convert form data to proper types before submission
+  const submissionData: TracerStudyResponse = {
+    ...this.formData,
+    year_of_graduation: parseInt(this.formData.year_of_graduation) || 0,
+    current_status: this.formData.current_status as 'Employed' | 'Self-employed' | 'Unemployed' | 'Pursuing further studies',
+    is_completed: true
+  };
 
-  this.tracerStudyService.submitResponse(this.formData).subscribe({
+  this.tracerStudyService.submitResponse(submissionData).subscribe({
     next: (response: ApiResponse<TracerStudyResponse>) => {
       if (response.success) {
         // Show success alert
@@ -260,6 +269,9 @@ onSubmit(): void {
         if (form) form.style.display = 'none';
         if (thankYouMessage) thankYouMessage.classList.remove('hidden');
 
+        // Update hasSubmitted flag
+        this.hasSubmitted = true;
+
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -267,12 +279,35 @@ onSubmit(): void {
     },
     error: (error: any) => {
       console.error('Error submitting form:', error);
-      if (error.error?.error) {
-        this.showAlert('error', error.error.error);
-      } else {
-        this.showAlert('error', 'Failed to submit form. Please try again.');
-      }
       this.isSubmitting = false;
+
+      // Get error message
+      const errorMessage = error.message || error.error?.error || 'Failed to submit form. Please try again.';
+
+      // Check if user has already submitted (by status code OR error message)
+      if (error.status === 409 || errorMessage.includes('already submitted')) {
+        // User has already submitted
+        this.showAlert('error', 'You have already submitted a response to this tracer study. Each user can only submit once.');
+        
+        // Update the UI to show already submitted state
+        this.hasSubmitted = true;
+        
+        // Hide the form
+        const form = document.getElementById('tracerForm');
+        if (form) form.style.display = 'none';
+        
+        // Scroll to top to show the "already submitted" message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (error.status === 400) {
+        // Validation error
+        this.showAlert('error', errorMessage);
+      } else if (error.status === 401 || error.status === 403) {
+        // Authentication error
+        this.showAlert('error', 'You must be logged in to submit the form. Please log in and try again.');
+      } else {
+        // Generic error
+        this.showAlert('error', errorMessage);
+      }
     }
   });
 }
@@ -310,5 +345,79 @@ showAlert(type: 'success' | 'error', message: string): void {
       alertDiv.remove();
     }
   }, 5000);
+}
+
+/**
+ * Check if employment section should be shown
+ */
+shouldShowEmploymentSection(): boolean {
+  return this.formData.current_status === 'Employed' || 
+         this.formData.current_status === 'Self-employed';
+}
+
+/**
+ * Check if skills section should be shown
+ */
+shouldShowSkillsSection(): boolean {
+  // Show for employed, self-employed, or pursuing further studies
+  return this.formData.current_status === 'Employed' || 
+         this.formData.current_status === 'Self-employed' ||
+         this.formData.current_status === 'Pursuing further studies';
+}
+
+/**
+ * Get next section based on current status
+ */
+getNextSection(currentSection: number): number {
+  if (currentSection === 2) {
+    // From Current Status section
+    if (this.shouldShowEmploymentSection()) {
+      return 3; // Go to Employment section
+    } else if (this.shouldShowSkillsSection()) {
+      return 4; // Skip Employment, go to Skills
+    } else {
+      return 5; // Skip Employment and Skills, go to Feedback
+    }
+  }
+  
+  if (currentSection === 3) {
+    // From Employment section
+    if (this.shouldShowSkillsSection()) {
+      return 4; // Go to Skills
+    } else {
+      return 5; // Skip Skills, go to Feedback
+    }
+  }
+  
+  // Default sequential flow
+  return currentSection + 1;
+}
+
+/**
+ * Get previous section based on current status
+ */
+getPreviousSection(currentSection: number): number {
+  if (currentSection === 5) {
+    // From Feedback section
+    if (this.shouldShowSkillsSection()) {
+      return 4; // Go back to Skills
+    } else if (this.shouldShowEmploymentSection()) {
+      return 3; // Go back to Employment
+    } else {
+      return 2; // Go back to Current Status
+    }
+  }
+  
+  if (currentSection === 4) {
+    // From Skills section
+    if (this.shouldShowEmploymentSection()) {
+      return 3; // Go back to Employment
+    } else {
+      return 2; // Go back to Current Status
+    }
+  }
+  
+  // Default sequential flow
+  return currentSection - 1;
 }
 }

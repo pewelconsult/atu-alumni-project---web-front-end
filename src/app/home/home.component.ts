@@ -12,6 +12,7 @@ import { EventsService } from '../../services/events.service';
 import { JobsService } from '../../services/jobs.service';
 import { ForumService } from '../../services/forum.service';
 import { ApiResponse } from '../../models/api-response';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-home',
@@ -53,7 +54,8 @@ export class HomeComponent implements OnInit {
     private eventsService: EventsService,
     private jobsService: JobsService,
     private forumService: ForumService,
-    private router: Router
+    private router: Router,
+    private imageService: ImageService
   ) {}
 
   ngOnInit(): void {
@@ -358,33 +360,17 @@ export class HomeComponent implements OnInit {
    * Get profile picture URL
    */
   getProfilePictureUrl(picturePath: string | null | undefined): string {
-    if (!picturePath) {
-      return '';
-    }
-    
-    if (picturePath.startsWith('http://') || picturePath.startsWith('https://')) {
-      return picturePath;
-    }
-    
-    const backendUrl = 'http://localhost:8080';
-    
-    if (picturePath.startsWith('/api')) {
-      return `${backendUrl}${picturePath}`;
-    }
-    
-    if (picturePath.startsWith('/uploads')) {
-      return `${backendUrl}/api${picturePath}`;
-    }
-    
-    return `${backendUrl}/api${picturePath}`;
+    return this.imageService.getProfilePictureUrl(picturePath);
   }
 
   /**
-   * Check if current user has profile picture
+   * Check if user has profile picture
    */
-  hasProfilePicture(): boolean {
-    return !!(this.currentUser?.profile_picture);
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
   }
+
+ 
 
   /**
    * Get current user profile picture

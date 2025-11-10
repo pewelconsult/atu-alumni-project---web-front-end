@@ -3,8 +3,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../models/api-response';
+import { 
+  TracerStudyAnalytics, 
+  TracerStudyResponse,
+  Mentor 
+} from '../models/tracer-study';
 import { environment } from '../environments/environment';
-import { TracerStudyAnalytics, TracerStudyResponse } from '../models/tracer-study';
 
 // Interface for response with user info (from joined query)
 export interface TracerResponseWithUser extends TracerStudyResponse {
@@ -72,7 +76,7 @@ export class TracerStudyService {
    * Get analytics by programme
    */
   getAnalyticsByProgramme(programme: string): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/analytics/programme/${programme}`);
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/analytics/programme/${encodeURIComponent(programme)}`);
   }
 
   /**
@@ -87,11 +91,11 @@ export class TracerStudyService {
   /**
    * Get mentors list
    */
-  getMentorsList(programme?: string, sector?: string): Observable<ApiResponse<any[]>> {
+  getMentorsList(programme?: string, sector?: string): Observable<ApiResponse<Mentor[]>> {
     let params = new HttpParams();
     if (programme) params = params.set('programme', programme);
     if (sector) params = params.set('sector', sector);
-    return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/mentors`, { params });
+    return this.http.get<ApiResponse<Mentor[]>>(`${this.apiUrl}/mentors`, { params });
   }
 
   // ==================== ADMIN METHODS ====================
@@ -154,6 +158,25 @@ export class TracerStudyService {
     return this.http.get(`${this.apiUrl}/export`, {
       params,
       responseType: 'blob'
+    });
+  }
+
+  /**
+   * Helper method to download exported CSV
+   */
+  downloadCsv(filters?: { programme?: string; year?: string }): void {
+    this.exportResponses(filters).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `tracer_study_export_${new Date().getTime()}.csv`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Export failed:', error);
+      }
     });
   }
 }

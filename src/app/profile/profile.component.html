@@ -77,7 +77,7 @@
             <div class="relative inline-block mb-4">
               <div *ngIf="user.profile_picture || profilePicturePreview; else noProfilePic" 
                    class="w-24 h-24 rounded-full overflow-hidden mx-auto ring-4 ring-white">
-                <img [src]="getProfilePictureUrl()" 
+                <img [src]="getProfilePictureUrl(user.profile_picture)" 
                      alt="Profile" 
                      class="w-full h-full object-cover">
               </div>
@@ -262,7 +262,7 @@
               <div class="flex items-center space-x-4">
                 <div class="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                   <img *ngIf="profilePicturePreview || user.profile_picture" 
-                       [src]="getProfilePictureUrl()" 
+                       [src]="getProfilePictureUrl(user.profile_picture)" 
                        alt="Profile" 
                        class="w-full h-full object-cover">
                   <div *ngIf="!profilePicturePreview && !user.profile_picture" 

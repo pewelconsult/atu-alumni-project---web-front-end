@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { ConnectionService } from '../../services/connection.service';
 import { User } from '../../models/user';
 import { ApiResponse } from '../../models/api-response';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-profile',
@@ -46,7 +47,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private connectionService: ConnectionService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private imageService: ImageService 
   ) {}
   
   ngOnInit(): void {
@@ -308,58 +310,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.coverPhotoPreview = null;
   }
   
-  /**
-   * Get full profile picture URL
-   */
-  getProfilePictureUrl(): string {
-    // If there's a preview (during upload), show it
-    if (this.profilePicturePreview) {
-      return this.profilePicturePreview;
-    }
-    
-    // Get the profile picture from user
-    const picturePath = this.user?.profile_picture;
-    
-    console.log('🖼️ Profile picture path:', picturePath); // Debug
-    
-    // If no picture, return default
-    if (!picturePath) {
-      return 'assets/images/default-avatar.png';
-    }
-    
-    // If it's already a full URL (starts with http/https), return as-is
-    if (picturePath.startsWith('http://') || picturePath.startsWith('https://')) {
-      console.log('✅ Using full URL:', picturePath);
-      return picturePath;
-    }
-    
-    // For development, construct the full URL
-    // Your backend is running on http://localhost:8080
-    const backendUrl = 'http://localhost:8080';
-    
-    // If path starts with /api, use it directly
-    if (picturePath.startsWith('/api')) {
-      const fullUrl = `${backendUrl}${picturePath}`;
-      console.log('✅ Constructed URL (with /api):', fullUrl);
-      return fullUrl;
-    }
-    
-    // If path starts with /uploads, add /api prefix
-    if (picturePath.startsWith('/uploads')) {
-      const fullUrl = `${backendUrl}/api${picturePath}`;
-      console.log('✅ Constructed URL (added /api):', fullUrl);
-      return fullUrl;
-    }
-    
-    // Otherwise, add /api prefix
-    const fullUrl = `${backendUrl}/api${picturePath}`;
-    console.log('✅ Constructed URL (default):', fullUrl);
-    return fullUrl;
+  getProfilePictureUrl(picturePath: string | null | undefined): string {
+    return this.imageService.getProfilePictureUrl(picturePath);
   }
-  
+
   /**
-   * Get full cover photo URL
+   * Check if user has profile picture
    */
+  hasProfilePicture(picturePath: string | null | undefined): boolean {
+    return this.imageService.hasImage(picturePath);
+  }
+
   getCoverPhotoUrl(): string {
     if (this.coverPhotoPreview) {
       return this.coverPhotoPreview;

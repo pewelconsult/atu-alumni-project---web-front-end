@@ -18,7 +18,7 @@ import { PostJobComponent } from './admin/post-job/post-job.component';
 import { ForumManagementComponent } from './admin/forum-management/forum-management.component';
 import { NewsManagementComponent } from './admin/news-management/news-management.component';
 import { NewsFormComponent } from './admin/news-form/news-form.component';
-import { LoginComponent } from './login/login.component'; 
+import { LoginComponent } from './login/login.component';
 import { EventDetailsComponent } from './event-details/event-details.component';
 import { NewsDetailsComponent } from './news-details/news-details.component';
 import { ForumTopicDetailComponent } from './forum-topic-detail/forum-topic-detail.component';
@@ -29,51 +29,181 @@ import { SettingsComponent } from './admin/settings/settings.component';
 import { ReportsComponent } from './admin/reports/reports.component';
 import { AdminTracerComponent } from './admin/admin-tracer/admin-tracer.component';
 import { CreateForumComponent } from './create-forum/create-forum.component';
+import { loginRedirectGuard } from '../guards/login-redirect.guard';
+import { authGuard } from '../guards/auth.guard';
+import { adminGuard } from '../guards/admin.guard';
+
+
 
 export const routes: Routes = [
   // Root redirect
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   
-  // Auth routes
-  { path: 'login', component: LoginComponent },
+  // Auth routes (with login redirect guard)
+  { 
+    path: 'login', 
+    component: LoginComponent,
+    canActivate: [loginRedirectGuard]
+  },
   
-  // Main application routes
-  { path: 'home', component: HomeComponent },
-  { path: 'networks', component: NetworksComponent },
-  { path: 'events', component: EventsComponent },
-  { path: 'events/:id', component: EventDetailsComponent, data: { prerender: false }},
-  { path: 'news', component: NewsComponent },
-  { path: 'news/:id', component: NewsDetailsComponent, data: { prerender: false }},
-  { path: 'forum', component: ForumComponent },
-  { path: 'forum/posts/:id', component: ForumTopicDetailComponent, data: { prerender: false }},
-  { path: 'messages', component: MessagesComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'profile/:id', component: ProfileComponent },
-  { path: 'tracer', component: TracerPageComponent },
-  { path: 'notifications', component: NotificationsComponent },
+  // Main application routes (protected by auth guard)
+  { 
+    path: 'home', 
+    component: HomeComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'networks', 
+    component: NetworksComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'events', 
+    component: EventsComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'events/:id', 
+    component: EventDetailsComponent, 
+    data: { prerender: false },
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'news', 
+    component: NewsComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'news/:id', 
+    component: NewsDetailsComponent, 
+    data: { prerender: false },
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'forum', 
+    component: ForumComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'forum/posts/:id', 
+    component: ForumTopicDetailComponent, 
+    data: { prerender: false },
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'messages', 
+    component: MessagesComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'profile', 
+    component: ProfileComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'profile/:id', 
+    component: ProfileComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'tracer', 
+    component: TracerPageComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'notifications', 
+    component: NotificationsComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'suggested-networks', 
+    component: SuggestedNetworksComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'createForum', 
+    component: CreateForumComponent,
+    canActivate: [authGuard]
+  },
   
-  // Job routes
-  { path: 'jobs', component: JobsComponent },
-  { path: 'jobs/:id', component: JobDetailsComponent },
+  // Job routes (protected by auth guard)
+  { 
+    path: 'jobs', 
+    component: JobsComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'jobs/:id', 
+    component: JobDetailsComponent,
+    canActivate: [authGuard]
+  },
   
-  
-  // Admin routes
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'users', component: UsersComponent },
-  { path: 'adminEvents', component: AdminEventsComponent },
-  { path: 'admin/create-event', component: CreateEventComponent },
-  { path: 'addUser', component: AddUserComponent },
-  { path: 'adminJob', component: JobManagementComponent },
-  { path: 'postJob', component: PostJobComponent },
-  { path: 'adminForum', component: ForumManagementComponent },
-  { path: 'adminTracer', component: AdminTracerComponent },
-  { path: 'adminNews', component: NewsManagementComponent },
-  { path: 'createForum', component: CreateForumComponent },
-  { path: 'newsForm', component: NewsFormComponent },
-  { path: 'reports', component: ReportsComponent },
-  { path: 'settings', component: SettingsComponent },
-  
-  { path: 'suggested-networks', component: SuggestedNetworksComponent },
+  // Admin routes (protected by admin guard)
+  { 
+    path: 'dashboard', 
+    component: DashboardComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'users', 
+    component: UsersComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'adminEvents', 
+    component: AdminEventsComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'admin/create-event', 
+    component: CreateEventComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'addUser', 
+    component: AddUserComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'adminJob', 
+    component: JobManagementComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'postJob', 
+    component: PostJobComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'adminForum', 
+    component: ForumManagementComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'adminTracer', 
+    component: AdminTracerComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'adminNews', 
+    component: NewsManagementComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'newsForm', 
+    component: NewsFormComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'reports', 
+    component: ReportsComponent,
+    canActivate: [adminGuard]
+  },
+  { 
+    path: 'settings', 
+    component: SettingsComponent,
+    canActivate: [adminGuard]
+  },
   
   // Wildcard route
   { path: '**', redirectTo: '/home' }

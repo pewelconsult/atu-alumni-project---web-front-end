@@ -97,10 +97,10 @@
             class="flex flex-col items-center focus:outline-none hover:opacity-80 transition-opacity">
             <!-- Profile Picture or Initials -->
             <div 
-              *ngIf="hasProfilePicture(); else userInitials"
+              *ngIf="hasProfilePicture(currentUser?.profile_picture); else userInitials"
               class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
               <img 
-                [src]="getProfilePictureUrl()" 
+                [src]="getProfilePictureUrl(currentUser?.profile_picture)" 
                 [alt]="currentUser?.first_name || 'User'" 
                 class="w-full h-full object-cover"
                 (error)="$any($event.target).src='assets/images/default-avatar.png'">
@@ -122,10 +122,10 @@
               <div class="flex items-center space-x-3">
                 <!-- Profile Picture in Dropdown -->
                 <div 
-                  *ngIf="hasProfilePicture(); else dropdownInitials"
+                  *ngIf="hasProfilePicture(currentUser?.profile_picture); else dropdownInitials"
                   class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary flex-shrink-0">
                   <img 
-                    [src]="getProfilePictureUrl()" 
+                    [src]="getProfilePictureUrl(currentUser?.profile_picture)" 
                     [alt]="currentUser?.first_name || 'User'" 
                     class="w-full h-full object-cover"
                     (error)="$any($event.target).src='assets/images/default-avatar.png'">
